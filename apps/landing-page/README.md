@@ -1,38 +1,56 @@
 # AskBob Landing Page
 
-Static landing page for askbob.live.
+Simple static landing page for Ask Bob.
 
 ## Purpose
 
-This app is the public-facing marketing and early access landing page for AskBob.
+This app is storytelling infrastructure for Ask Bob. It explains the early product idea, introduces Discovery Mode and keeps the message grounded in MORSE and NAIB:
 
-## Principles
+- operational AI for real-world businesses
+- trust, provenance and explainability
+- practical discovery before heavy platform work
+- no AI hype
 
-- Keep it simple
-- Keep it fast
-- Avoid AI hype
-- Explain Bob clearly
-- Focus on operational clarity
+This is not core Bob platform infrastructure.
 
-## Deployment Target
+## Local Run Instructions
 
-Suggested options:
+Open `index.html` directly in a browser:
+
+```text
+apps/landing-page/index.html
+```
+
+Or serve this folder with any static web server:
+
+```powershell
+cd apps/landing-page
+python -m http.server 8080
+```
+
+Then open `http://localhost:8080`.
+
+## Deployment Options
+
+No build tooling is required. Deploy the folder as static HTML/CSS using any simple static hosting target, such as:
 
 - Cloudflare Pages
 - Netlify
 - Vercel
 - Azure Static Web Apps
+- any standard web host
 
 ## Structure
 
 ```text
-apps/landing-page
-├─ public
-│  └─ assets
-├─ src
-└─ README.md
+apps/landing-page/
+  index.html
+  styles.css
+  README.md
+  public/
+    assets/
 ```
 
 ## Notes
 
-The landing page is storytelling infrastructure, not Bob platform infrastructure.
+Keep `public/assets` for images, logos and media only. Do not add backend services, build tooling or framework code unless the landing page genuinely needs them.

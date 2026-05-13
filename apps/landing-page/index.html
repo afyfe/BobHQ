@@ -3,48 +3,110 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ask Bob — Your Operational AI Assistant</title>
-  <meta name="description" content="Ask Bob helps businesses rediscover operational knowledge across SharePoint, Sage, spreadsheets, emails, documents and disconnected systems." />
+  <title>Ask Bob - Your Operational AI Assistant</title>
+  <meta name="description" content="Ask Bob is an operational AI assistant for real-world businesses. Discovery Mode helps surface trust, provenance and explainability without AI hype." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="nav">
-    <div class="brand"><div class="logo">B</div><span>Ask Bob</span></div>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Ask Bob home">
+      <img src="public/assets/askbob-mark.svg" alt="" />
+      <span>Ask Bob</span>
+    </a>
     <nav>
-      <a href="#discovery">Discovery</a>
+      <a href="#story">Story</a>
+      <a href="#discovery">Discovery Mode</a>
       <a href="#trust">Trust</a>
-      <a href="#contact">Early access</a>
+      <a href="#early-access">Early access</a>
     </nav>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <div class="pill">Operational AI for real-world businesses</div>
+        <p class="eyebrow">Operational AI for real-world businesses</p>
         <h1>Ask Bob.</h1>
         <h2>Your operational AI assistant.</h2>
-        <p>Bob helps businesses rediscover operational knowledge across SharePoint, Sage, spreadsheets, emails, documents and disconnected systems.</p>
-        <div class="actions">
-          <a class="btn primary" href="#contact">Start Discovery</a>
-          <a class="btn secondary" href="#demo">See Bob in action</a>
-        </div>
+        <p>Bob helps teams find what is true across the systems they already use: documents, spreadsheets, email, finance records, shared drives and the knowledge sitting between them.</p>
+        <a class="button" href="#early-access">Start Discovery</a>
       </div>
 
-      <div class="chat-card" id="demo">
-        <div class="chat-header"><span></span><span></span><span></span><strong>Bob</strong></div>
-        <div class="bubble user">Why hasn’t ABC Ltd been installed?</div>
-        <div class="bubble bob">
-          I found 3 relevant sources:
-          <ul>
-            <li>Signed agreement in SharePoint</li>
-            <li>Pending PO request email</li>
-            <li>Finance hold in Sage</li>
-          </ul>
-          Installation appears blocked because the required PO number has not been supplied.
+      <aside class="answer-panel" aria-label="Example Ask Bob answer">
+        <div class="panel-top">
+          <span>Discovery Mode</span>
+          <strong>Human-approved</strong>
         </div>
-        <div class="source-note">Sources visible. Assumptions labelled. Decisions remain human-approved.</div>
+        <p class="question">Why has this installation stalled?</p>
+        <div class="answer">
+          <p>Bob found three relevant sources:</p>
+          <ul>
+            <li>Signed agreement in SharePoint.</li>
+            <li>Pending purchase order email.</li>
+            <li>Finance hold in the account record.</li>
+          </ul>
+          <p>The likely blocker is the missing PO number. Confidence: medium. Assumption labelled.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="story" id="story">
+      <div>
+        <p class="eyebrow">Not Another AI Bollocks</p>
+        <h2>Bob is not here to sound clever.</h2>
+      </div>
+      <p>Bob is here to make operations clearer. It should show its working, separate fact from inference, and help people make better decisions without pretending the machine is in charge.</p>
+    </section>
+
+    <section class="grid-section" aria-label="Ask Bob principles">
+      <article>
+        <h3>Modular</h3>
+        <p>Connectors and capabilities can grow without turning the product into a monolith.</p>
+      </article>
+      <article>
+        <h3>Role-based</h3>
+        <p>People see the operational truth that fits their permissions, responsibilities and context.</p>
+      </article>
+      <article>
+        <h3>Explainable</h3>
+        <p>Sources, confidence and reasoning stay visible so users can trust, challenge or correct Bob.</p>
+      </article>
+    </section>
+
+    <section class="discovery" id="discovery">
+      <div>
+        <p class="eyebrow">Discovery Mode</p>
+        <h2>Look around before building anything heavy.</h2>
+        <p>Discovery Mode is the calm first step: map systems, surface knowledge sources and identify operational gaps before indexing, automation or deeper platform work.</p>
+      </div>
+      <ul class="checklist">
+        <li>Find disconnected sources.</li>
+        <li>Label provenance clearly.</li>
+        <li>Keep permissions customer-controlled.</li>
+        <li>Avoid backend complexity until there is a real reason.</li>
+      </ul>
+    </section>
+
+    <section class="trust" id="trust">
+      <p class="eyebrow">Trust first</p>
+      <h2>Provenance beats polish.</h2>
+      <div class="trust-list">
+        <span>Sources visible</span>
+        <span>Assumptions labelled</span>
+        <span>Confidence stated</span>
+        <span>Human decisions preserved</span>
       </div>
     </section>
+
+    <section class="early-access" id="early-access">
+      <h2>Operational AI, without the fog machine.</h2>
+      <p>Ask Bob is early. The landing page tells the story while the core Bob platform stays separate, simple and deliberate.</p>
+      <a class="button secondary" href="mailto:hello@askbob.live">hello@askbob.live</a>
+    </section>
   </main>
+
+  <footer>
+    <span>Ask Bob</span>
+    <span>Calm, practical, explainable operational AI.</span>
+  </footer>
 </body>
 </html>
