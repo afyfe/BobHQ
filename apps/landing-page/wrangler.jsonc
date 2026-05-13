@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schema.cloudflare.com/wrangler/config.json",
+  "name": "askbob-landing-page",
+  "compatibility_date": "2026-05-13",
+  "assets": {
+    "directory": "."
+  },
+  "workers_dev": false,
+  "preview_urls": false
+}
