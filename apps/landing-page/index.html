@@ -16,6 +16,7 @@
     <nav>
       <a href="#story">Story</a>
       <a href="#discovery">Discovery Mode</a>
+      <a href="#discovery-report">Report</a>
       <a href="#trust">Trust</a>
       <a href="#early-access">Early access</a>
     </nav>
@@ -84,6 +85,88 @@
         <li>Keep permissions customer-controlled.</li>
         <li>Avoid backend complexity until there is a real reason.</li>
       </ul>
+    </section>
+
+    <section class="discovery-report" id="discovery-report" aria-labelledby="discovery-report-title">
+      <div class="report-intro">
+        <div>
+          <p class="eyebrow">Discovery Report</p>
+          <h2 id="discovery-report-title">Bob discovers first.</h2>
+        </div>
+        <p>Bob discovers first. You decide what he learns from.</p>
+      </div>
+
+      <div class="report-shell">
+        <div class="report-header">
+          <div>
+            <strong>Fictional company scan</strong>
+            <span>Source provenance visible. Customer control preserved.</span>
+          </div>
+          <span class="report-status">Awaiting review</span>
+        </div>
+
+        <div class="report-list" aria-label="Synthetic discovery results">
+          <article class="report-row">
+            <div>
+              <span class="source-type">SharePoint</span>
+              <h3>6 SharePoint sites discovered</h3>
+              <p>Candidate workspaces found from connected Microsoft 365 metadata.</p>
+            </div>
+            <span class="status discovered">Discovered</span>
+          </article>
+
+          <article class="report-row">
+            <div>
+              <span class="source-type">Finance</span>
+              <h3>Sage finance system detected</h3>
+              <p>System presence inferred from approved connector settings.</p>
+            </div>
+            <span class="status inferred">Inferred</span>
+          </article>
+
+          <article class="report-row">
+            <div>
+              <span class="source-type">Spreadsheets</span>
+              <h3>3 customer spreadsheets found</h3>
+              <p>Files look customer-related, but need a human to confirm their role.</p>
+            </div>
+            <span class="status needs-approval">Needs approval</span>
+          </article>
+
+          <article class="report-row">
+            <div>
+              <span class="source-type">Mailbox</span>
+              <h3>1 shared sales mailbox found</h3>
+              <p>Mailbox source confirmed as relevant for sales operations review.</p>
+            </div>
+            <span class="status confirmed">Confirmed</span>
+          </article>
+
+          <article class="report-row">
+            <div>
+              <span class="source-type">Documents</span>
+              <h3>412 operational documents detected</h3>
+              <p>Document count grouped by source so teams can approve scope gradually.</p>
+            </div>
+            <span class="status discovered">Discovered</span>
+          </article>
+
+          <article class="report-row">
+            <div>
+              <span class="source-type">Data quality</span>
+              <h3>2 possible duplicate customer lists found</h3>
+              <p>Bob can flag the overlap, but people decide which list is trusted.</p>
+            </div>
+            <span class="status needs-approval">Needs approval</span>
+          </article>
+        </div>
+
+        <div class="report-actions" aria-label="Discovery report actions">
+          <button type="button">Approve source</button>
+          <button class="quiet" type="button">Ignore</button>
+          <button class="quiet" type="button">Review details</button>
+        </div>
+      </div>
     </section>
 
     <section class="trust" id="trust">

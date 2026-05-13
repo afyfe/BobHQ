@@ -132,6 +132,7 @@ section h2 {
 .story,
 .grid-section article,
 .discovery,
+.discovery-report,
 .trust,
 .early-access {
   border: 1px solid var(--line);
@@ -178,6 +179,7 @@ section h2 {
 
 .story,
 .discovery,
+.discovery-report,
 .trust,
 .early-access {
   margin: 0 0 28px;
@@ -218,6 +220,147 @@ section h2 {
   display: grid;
   grid-template-columns: 1fr 0.9fr;
   gap: 34px;
+}
+
+.discovery-report {
+  display: grid;
+  gap: 28px;
+}
+
+.report-intro {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 36px;
+  align-items: end;
+}
+
+.report-intro p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1.55;
+}
+
+.report-shell {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+  background: #eef3f8;
+}
+
+.report-header div {
+  display: grid;
+  gap: 4px;
+}
+
+.report-header span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.report-status,
+.status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.report-list {
+  display: grid;
+}
+
+.report-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.report-row h3 {
+  margin: 4px 0 6px;
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.report-row p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.source-type {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status.discovered {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.status.inferred {
+  background: #edf2fa;
+  color: var(--blue);
+}
+
+.status.needs-approval {
+  background: #fff6e6;
+  color: #8a5a0a;
+}
+
+.status.confirmed {
+  background: var(--green);
+  border-color: var(--green);
+  color: #ffffff;
+}
+
+.report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 18px;
+  background: var(--panel);
+}
+
+button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  background: var(--green);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  cursor: default;
+}
+
+button.quiet {
+  border-color: var(--line);
+  background: var(--panel);
+  color: var(--ink);
 }
 
 .checklist {
@@ -270,6 +413,8 @@ footer {
   .hero,
   .story,
   .discovery,
+  .report-intro,
+  .report-row,
   .grid-section,
   .trust-list {
     grid-template-columns: 1fr;
@@ -282,9 +427,14 @@ footer {
 
   .story,
   .discovery,
+  .discovery-report,
   .trust,
   .early-access {
     padding: 24px;
+  }
+
+  .report-header {
+    flex-direction: column;
   }
 
   footer {
