@@ -5,25 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ask Bob — Your Operational AI Assistant</title>
   <meta name="description" content="Ask Bob helps businesses rediscover operational knowledge across SharePoint, Sage, spreadsheets, emails, documents and disconnected systems." />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css?v=20260513-full" />
 </head>
 <body>
   <header class="nav">
-    <div class="brand"><div class="logo">B</div><span>Ask Bob</span></div>
-    <nav>
+    <a class="brand" href="#top" aria-label="Ask Bob home">
+      <img src="/public/assets/askbob-mark.svg" alt="" class="brand-mark" />
+      <span>Ask Bob</span>
+    </a>
+    <nav aria-label="Primary navigation">
       <a href="#discovery">Discovery</a>
       <a href="#trust">Trust</a>
       <a href="#contact">Early access</a>
     </nav>
   </header>
 
-  <main>
+  <main id="top">
     <section class="hero">
       <div class="hero-copy">
         <div class="pill">Operational AI for real-world businesses</div>
         <h1>Ask Bob.</h1>
         <h2>Your operational AI assistant.</h2>
-        <p>Bob helps businesses rediscover operational knowledge across SharePoint, Sage, spreadsheets, emails, documents and disconnected systems.</p>
+        <p>
+          Bob helps businesses rediscover operational knowledge across SharePoint,
+          Sage, spreadsheets, emails, documents and disconnected systems.
+        </p>
         <div class="actions">
           <a class="btn primary" href="#contact">Start Discovery</a>
           <a class="btn secondary" href="#demo">See Bob in action</a>
@@ -45,6 +51,113 @@
         <div class="source-note">Sources visible. Assumptions labelled. Decisions remain human-approved.</div>
       </div>
     </section>
+
+    <section class="problem">
+      <h2>Businesses don’t need another system.</h2>
+      <p>They need visibility across the systems they already have.</p>
+      <div class="grid">
+        <div class="card">Nobody knows which spreadsheet is correct.</div>
+        <div class="card">Customer information lives in five different places.</div>
+        <div class="card">SharePoint has become a dumping ground.</div>
+        <div class="card">Critical knowledge sits in one person’s head.</div>
+        <div class="card">Sage, CRM and documents don’t talk to each other.</div>
+        <div class="card">Processes are undocumented until they break.</div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature"><h3>Discover</h3><p>Bob identifies disconnected systems, documents and operational knowledge sources.</p></div>
+      <div class="feature"><h3>Understand</h3><p>Bob explains workflows, approvals, blockers, customer history and business processes.</p></div>
+      <div class="feature"><h3>Remember</h3><p>Bob builds a trusted operational memory layer, separating facts from inference.</p></div>
+      <div class="feature"><h3>Assist</h3><p>Ask Bob questions, create reminders, summarise records and find what matters.</p></div>
+    </section>
+
+    <section class="discovery" id="discovery">
+      <div>
+        <div class="pill">Bob Discovery Mode</div>
+        <h2>Bob discovers first. You decide what he learns from.</h2>
+        <p>
+          Bob Connector can discover what systems exist before anything is fully indexed.
+          You review the sources, approve what matters, and keep control of your operational data.
+        </p>
+      </div>
+      <div class="checklist">
+        <span>✓ SharePoint</span>
+        <span>✓ Sage</span>
+        <span>✓ SQL databases</span>
+        <span>✓ Shared drives</span>
+        <span>✓ PDFs & spreadsheets</span>
+        <span>✓ Outlook & Microsoft 365</span>
+      </div>
+    </section>
+
+    <section class="report-section" aria-labelledby="report-title">
+      <div class="section-heading">
+        <div class="pill">Discovery Report</div>
+        <h2 id="report-title">A controlled first look at operational chaos.</h2>
+        <p>
+          Bob shows what he found, what he inferred, and what needs human approval before indexing.
+        </p>
+      </div>
+
+      <div class="report-card">
+        <div class="report-row">
+          <div><strong>6 SharePoint sites discovered</strong><span>Source: Microsoft 365 tenant scan</span></div>
+          <em class="status discovered">Discovered</em>
+        </div>
+        <div class="report-row">
+          <div><strong>Sage finance system detected</strong><span>Source: connector environment check</span></div>
+          <em class="status needs">Needs approval</em>
+        </div>
+        <div class="report-row">
+          <div><strong>3 customer spreadsheets found</strong><span>Source: documents library metadata</span></div>
+          <em class="status inferred">Inferred</em>
+        </div>
+        <div class="report-row">
+          <div><strong>1 shared sales mailbox found</strong><span>Source: Microsoft 365 mailbox discovery</span></div>
+          <em class="status needs">Needs approval</em>
+        </div>
+        <div class="report-row">
+          <div><strong>412 operational documents detected</strong><span>Source: SharePoint document scan</span></div>
+          <em class="status discovered">Discovered</em>
+        </div>
+        <div class="report-row">
+          <div><strong>2 possible duplicate customer lists found</strong><span>Source: spreadsheet name/entity matching</span></div>
+          <em class="status confirmed">Confirmed</em>
+        </div>
+        <div class="report-actions">
+          <button type="button">Approve source</button>
+          <button class="ghost" type="button">Ignore</button>
+          <button class="ghost" type="button">Review details</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust" id="trust">
+      <h2>Built for trust from day one.</h2>
+      <div class="trust-grid">
+        <div>Outbound-only connector</div>
+        <div>Encrypted communication</div>
+        <div>Customer-controlled permissions</div>
+        <div>Audit logging</div>
+        <div>Tenant isolation</div>
+        <div>No inbound firewall changes</div>
+      </div>
+    </section>
+
+    <section class="cta" id="contact">
+      <h2>Ready to find out where your business truth lives?</h2>
+      <p>Bob is currently in early development. Join the early access list for Discovery Mode.</p>
+      <form>
+        <input type="email" placeholder="Work email" aria-label="Work email" />
+        <button type="button">Request early access</button>
+      </form>
+    </section>
   </main>
+
+  <footer>
+    <span>© Ask Bob</span>
+    <span>Operational intelligence for messy real-world businesses.</span>
+  </footer>
 </body>
 </html>
