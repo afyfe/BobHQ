@@ -7,7 +7,7 @@ Static landing page for askbob.live.
 This app is the public-facing marketing and early access landing page for AskBob.
 
 ## Principles
-
+o
 - Keep it simple
 - Keep it fast
 - Avoid AI hype
