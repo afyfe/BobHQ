@@ -1,0 +1,6 @@
+customer_name,invoice_number,invoice_date,due_date,amount_gbp,days_overdue,status,notes
+ABC Ltd,INV-9104,2026-04-04,2026-05-04,1840.00,9,On hold,"No PO reference on invoice"
+Pembroke Print Services Ltd,INV-9033,2026-03-21,2026-04-20,3220.50,23,Disputed,"Customer says pricing was agreed lower by email"
+Oakfield Community Care Ltd,INV-9061,2026-04-01,2026-05-01,740.00,12,Open,"Service credit requested but not approved"
+Fenwick Plumbing Supplies Ltd,INV-9120,2026-04-22,2026-05-22,1295.00,0,Not due,"Renewal invoice raised early"
+Brighton Bike Workshop Ltd,INV-9089,2026-04-10,2026-05-10,640.00,3,Chasing,"Payment promised this week"

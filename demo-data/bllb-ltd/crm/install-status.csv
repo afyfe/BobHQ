@@ -1,0 +1,7 @@
+install_id,customer_name,site_town,status,owner,target_date,po_reference,blocker,last_updated
+INS-2401,ABC Ltd,Leeds,Blocked,Unassigned,2026-05-10,,"Waiting for PO number and finance release",2026-05-07
+INS-2402,Greenford Office Supplies Ltd,Reading,Scheduled,Ravi Singh,2026-05-17,PO-7781,"Engineer confirmed",2026-05-09
+INS-2403,Hartley & Co Kitchens Ltd,Bristol,In progress,Ella Carter,2026-05-15,PO-7812,"Access hours not confirmed",2026-05-08
+INS-2404,Silver Birch Nursery Ltd,Nottingham,Blocked,Steve,2026-05-13,PO-7744,"Owner unclear; Steve says not his area",2026-05-06
+INS-2405,Oakfield Community Care Ltd,Derby,Complete,Ravi Singh,2026-04-28,PO-7620,"Post-install service issue open",2026-05-03
+INS-2406,Brighton Bike Workshop Ltd,Brighton,Pending,Unassigned,2026-05-22,,"Awaiting signed acceptance form",2026-05-09

@@ -1,0 +1,5 @@
+issue_id,customer_name,raised_date,severity,owner,status,summary
+ISS-501,Oakfield Community Care Ltd,2026-05-01,Medium,,Open,"Customer says onboarding checklist missed user training"
+ISS-502,Silver Birch Nursery Ltd,2026-05-06,High,Steve Marsh,Open,"Install ownership disputed between sales and operations"
+ISS-503,Hartley & Co Kitchens Ltd,2026-05-08,Low,Ella Carter,Waiting,"Access hours need confirmation"
+ISS-504,ABC Ltd,2026-05-09,Medium,Maya Patel,Open,"Customer chasing install date but PO still missing"

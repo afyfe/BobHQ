@@ -1,0 +1,11 @@
+customer_id,customer_name,site_town,account_manager,crm_status,renewal_date,notes
+CUST-1001,ABC Ltd,Leeds,Maya Patel,Active,2026-05-31,"Install delayed; PO reference missing from latest email thread"
+CUST-1002,Greenford Office Supplies Ltd,Reading,Tom Willis,Active,2026-06-14,"Uses legacy price band B"
+CUST-1003,Hartley & Co Kitchens Ltd,Bristol,Maya Patel,Active,2026-05-18,"Pricing exception agreed by email, not in CRM"
+CUST-1004,Northgate Dental Group,York,Leah Morris,Prospect,,"Agreement sent, not signed"
+CUST-1005,ABC Limited,Leeds,Maya Patel,Active,2026-05-31,"Possible duplicate of ABC Ltd; older CRM record"
+CUST-1006,Pembroke Print Services Ltd,Cardiff,Tom Willis,At risk,2026-05-24,"Invoice dispute open; do not auto-renew until finance clears"
+CUST-1007,Silver Birch Nursery Ltd,Nottingham,Leah Morris,Active,2026-07-02,"Install owner unclear after engineer reassignment"
+CUST-1008,Fenwick Plumbing Supplies Ltd,Newcastle,Maya Patel,Active,2026-05-29,"Renewal call requested by director"
+CUST-1009,Brighton Bike Workshop Ltd,Brighton,Tom Willis,Active,2026-06-05,"Uses spreadsheet pricing, not standard CRM price"
+CUST-1010,Oakfield Community Care Ltd,Derby,Leah Morris,Active,2026-05-21,"Service issue logged after onboarding"

@@ -1,0 +1,5 @@
+customer_name,invoice_number,amount_gbp,last_chased,chased_by,next_action
+ABC Ltd,INV-9104,1840.00,2026-05-08,Nina Shaw,"Ask account manager for PO reference"
+Pembroke Print Services Ltd,INV-9033,3220.50,2026-05-06,Nina Shaw,"Hold renewal until dispute resolved"
+Oakfield Community Care Ltd,INV-9061,740.00,2026-05-10,Finance Inbox,"Confirm whether credit note is approved"
+Brighton Bike Workshop Ltd,INV-9089,640.00,2026-05-11,Nina Shaw,"Call if payment not received by Friday"
