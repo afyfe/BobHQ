@@ -220,6 +220,7 @@ button.quiet:focus-visible {
 .discovery,
 .demo-flow,
 .ask-bob-demo,
+.bob-answer-demo,
 .discovery-report,
 .trust,
 .early-access {
@@ -277,6 +278,7 @@ button.quiet:focus-visible {
 .discovery,
 .demo-flow,
 .ask-bob-demo,
+.bob-answer-demo,
 .discovery-report,
 .trust,
 .early-access {
@@ -508,6 +510,127 @@ button.quiet:focus-visible {
   color: #ffd690;
 }
 
+.bob-answer-demo {
+  display: grid;
+  gap: 28px;
+}
+
+.bob-answer-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 36px;
+  align-items: end;
+}
+
+.bob-answer-intro p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1.55;
+}
+
+.answer-demo-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.answer-summary,
+.evidence-panel,
+.source-card,
+.next-actions {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.answer-summary {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 22px;
+}
+
+.answer-summary-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.answer-summary h3,
+.evidence-group h3,
+.source-card h3,
+.next-actions h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.answer-summary p {
+  margin: 0;
+  color: #dbeafe;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.evidence-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.evidence-group {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  background: var(--panel);
+}
+
+.evidence-group ul,
+.next-actions ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.evidence-group strong {
+  color: var(--ink);
+}
+
+.source-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.source-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 18px;
+}
+
+.source-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.next-actions {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  background: var(--green-soft);
+}
+
 .checklist {
   display: grid;
   gap: 12px;
@@ -704,6 +827,9 @@ footer {
   .grid-section,
   .flow-steps,
   .query-grid,
+  .answer-demo-layout,
+  .evidence-panel,
+  .source-card-grid,
   .trust-list {
     grid-template-columns: 1fr;
   }
@@ -730,6 +856,7 @@ footer {
   .discovery,
   .demo-flow-intro,
   .ask-bob-intro,
+  .bob-answer-intro,
   .report-intro,
   .report-row {
     grid-template-columns: 1fr;
@@ -739,6 +866,7 @@ footer {
   .discovery,
   .demo-flow,
   .ask-bob-demo,
+  .bob-answer-demo,
   .discovery-report,
   .trust,
   .early-access {
@@ -779,6 +907,7 @@ footer {
   .discovery p,
   .demo-flow-intro p:not(.eyebrow),
   .ask-bob-intro p:not(.eyebrow),
+  .bob-answer-intro p:not(.eyebrow),
   .report-intro p:not(.eyebrow),
   .early-access p {
     font-size: 18px;

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ask Bob - Your Operational AI Assistant</title>
   <meta name="description" content="Ask Bob is an operational AI assistant for real-world businesses. Discovery Mode helps surface trust, provenance and explainability without AI hype." />
-  <link rel="stylesheet" href="/styles.css?v=ask-bob-query-demo" />
+  <link rel="stylesheet" href="/styles.css?v=bob-answer-demo" />
 </head>
 <body>
   <header class="site-header">
@@ -18,6 +18,7 @@
       <a href="#discovery">Discovery Mode</a>
       <a href="#demo-flow">Demo</a>
       <a href="#ask-bob">Ask Bob</a>
+      <a href="#bob-answer-demo">Answer</a>
       <a href="#discovery-report">Report</a>
       <a href="#trust">Trust</a>
       <a href="#early-access">Early access</a>
@@ -189,6 +190,88 @@
             <p><strong>Assumption:</strong> The supplier email is the rejection reason. Finance should confirm before reissuing.</p>
           </div>
         </article>
+      </div>
+    </section>
+
+    <section class="bob-answer-demo" id="bob-answer-demo" aria-labelledby="bob-answer-title">
+      <div class="bob-answer-intro">
+        <div>
+          <p class="eyebrow">Bob explains the mess</p>
+          <h2 id="bob-answer-title">Why hasn't ABC Ltd been installed?</h2>
+        </div>
+        <p>A static answer built from the synthetic BLLB LTD demo data. Bob shows the operational trail before suggesting what to do next.</p>
+      </div>
+
+      <div class="answer-demo-layout">
+        <article class="answer-summary">
+          <div class="answer-summary-top">
+            <span class="status likely">Likely blocker</span>
+            <span class="status needs-review">Needs review</span>
+          </div>
+          <h3>Bob's conclusion</h3>
+          <p>The install appears blocked because the PO number has not been supplied. There may also be a duplicate CRM record that should be reviewed before proceeding.</p>
+        </article>
+
+        <div class="evidence-panel">
+          <div class="evidence-group">
+            <h3>Facts found</h3>
+            <ul>
+              <li>CRM contains both <strong>ABC Ltd</strong> and <strong>ABC Limited</strong> for Leeds, with the same account manager and renewal date.</li>
+              <li>The install board shows <strong>INS-2401</strong> as blocked, high priority and missing an owner.</li>
+              <li>The mailbox thread says finance cannot release ABC Ltd until a PO reference is supplied.</li>
+              <li>Aged debtors shows <strong>INV-9104</strong> on hold because there is no PO reference on the invoice.</li>
+            </ul>
+          </div>
+
+          <div class="evidence-group">
+            <h3>Assumptions to check</h3>
+            <ul>
+              <li>The PO thread is still the active blocker and has not been superseded by a later finance update.</li>
+              <li>ABC Ltd and ABC Limited are duplicate CRM records rather than separate legal entities.</li>
+              <li>The empty install owner means operations has not formally assigned responsibility.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="source-card-grid" aria-label="Sources used for the Bob answer">
+        <article class="source-card">
+          <span class="source-type">CRM</span>
+          <h3>customers.csv</h3>
+          <p>Rows CUST-1001 and CUST-1005 show ABC Ltd / ABC Limited with matching Leeds details and duplicate-risk notes.</p>
+          <span class="status needs-review">Needs review</span>
+        </article>
+
+        <article class="source-card">
+          <span class="source-type">Operations</span>
+          <h3>install-board.csv</h3>
+          <p>INS-2401 is blocked, high priority, has no owner and notes: "No PO; finance hold".</p>
+          <span class="status confirmed">Confirmed</span>
+        </article>
+
+        <article class="source-card">
+          <span class="source-type">Mailbox</span>
+          <h3>po-request-thread.md</h3>
+          <p>Finance and sales emails state that ABC Ltd cannot be released until the PO is issued.</p>
+          <span class="status likely">Likely</span>
+        </article>
+
+        <article class="source-card">
+          <span class="source-type">Finance</span>
+          <h3>aged-debtors.csv</h3>
+          <p>INV-9104 is on hold with the note: "No PO reference on invoice".</p>
+          <span class="status confirmed">Confirmed</span>
+        </article>
+      </div>
+
+      <div class="next-actions">
+        <h3>Suggested next actions</h3>
+        <ul>
+          <li>Review duplicate customer record</li>
+          <li>Chase PO number</li>
+          <li>Confirm install owner</li>
+          <li>Update CRM notes</li>
+        </ul>
       </div>
     </section>
 
