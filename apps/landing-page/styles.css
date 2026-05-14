@@ -228,6 +228,7 @@ button.quiet:focus-visible {
 .ask-bob-demo,
 .bob-answer-demo,
 .operational-memory,
+.operational-relationships,
 .discovery-report,
 .trust,
 .early-access {
@@ -287,6 +288,7 @@ button.quiet:focus-visible {
 .ask-bob-demo,
 .bob-answer-demo,
 .operational-memory,
+.operational-relationships,
 .discovery-report,
 .trust,
 .early-access {
@@ -749,6 +751,97 @@ button.quiet:focus-visible {
   color: var(--ink);
 }
 
+.operational-relationships {
+  display: grid;
+  gap: 28px;
+}
+
+.relationships-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 36px;
+  align-items: end;
+}
+
+.relationships-intro p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1.55;
+}
+
+.relationship-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.62fr) minmax(0, 1.38fr);
+  gap: 18px;
+}
+
+.relationship-focus,
+.relationship-row {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.relationship-focus {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 22px;
+}
+
+.relationship-focus h3,
+.relationship-row h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.relationship-focus p,
+.relationship-row p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.relationship-row strong,
+.relationship-uncertain {
+  color: var(--ink);
+}
+
+.relationship-list {
+  display: grid;
+  gap: 12px;
+}
+
+.relationship-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+  padding: 18px;
+}
+
+.relationship-row > div:first-child {
+  display: grid;
+  gap: 8px;
+}
+
+.relationship-meta {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.relationship-uncertain {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--amber-soft);
+}
+
 .checklist {
   display: grid;
   gap: 12px;
@@ -957,6 +1050,7 @@ footer {
   .evidence-panel,
   .source-card-grid,
   .correction-grid,
+  .relationship-panel,
   .trust-list {
     grid-template-columns: 1fr;
   }
@@ -983,7 +1077,9 @@ footer {
   .ask-bob-intro,
   .bob-answer-intro,
   .memory-intro,
+  .relationships-intro,
   .report-intro,
+  .relationship-row,
   .report-row {
     grid-template-columns: 1fr;
   }
@@ -994,6 +1090,7 @@ footer {
   .ask-bob-demo,
   .bob-answer-demo,
   .operational-memory,
+  .operational-relationships,
   .discovery-report,
   .trust,
   .early-access {
@@ -1006,6 +1103,7 @@ footer {
   .ask-bob-demo,
   .bob-answer-demo,
   .operational-memory,
+  .operational-relationships,
   .discovery-report,
   .trust,
   .early-access {
@@ -1074,6 +1172,8 @@ footer {
   .source-card,
   .memory-item,
   .memory-correction,
+  .relationship-focus,
+  .relationship-row,
   .report-row {
     padding: 16px;
   }
@@ -1084,6 +1184,7 @@ footer {
   .ask-bob-demo,
   .bob-answer-demo,
   .operational-memory,
+  .operational-relationships,
   .discovery-report,
   .trust,
   .early-access {
@@ -1134,6 +1235,7 @@ footer {
   .ask-bob-intro p:not(.eyebrow),
   .bob-answer-intro p:not(.eyebrow),
   .memory-intro p:not(.eyebrow),
+  .relationships-intro p:not(.eyebrow),
   .report-intro p:not(.eyebrow),
   .early-access p {
     font-size: 17px;

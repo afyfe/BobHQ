@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ask Bob - Your Operational AI Assistant</title>
   <meta name="description" content="Ask Bob is an operational AI assistant for real-world businesses. Discovery Mode helps surface trust, provenance and explainability without AI hype." />
-  <link rel="stylesheet" href="/styles.css?v=mobile-flow-check" />
+  <link rel="stylesheet" href="/styles.css?v=operational-relationships-demo" />
 </head>
 <body>
   <header class="site-header">
@@ -20,6 +20,7 @@
       <a href="#ask-bob">Ask Bob</a>
       <a href="#bob-answer-demo">Answer</a>
       <a href="#operational-memory">Memory</a>
+      <a href="#operational-relationships">Links</a>
       <a href="#discovery-report">Report</a>
       <a href="#trust">Trust</a>
       <a href="#early-access">Early access</a>
@@ -358,6 +359,99 @@
         <div class="correction-grid">
           <p><strong>Initial assumption:</strong> install delayed due to stock shortage.</p>
           <p><strong>Updated conclusion after email review:</strong> missing PO number.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="operational-relationships" id="operational-relationships" aria-labelledby="relationships-title">
+      <div class="relationships-intro">
+        <div>
+          <p class="eyebrow">Operational Relationships</p>
+          <h2 id="relationships-title">Bob rebuilds operational context across disconnected systems.</h2>
+        </div>
+        <p>Instead of drawing a noisy graph, Bob explains why two pieces of operational information belong together and where each link came from.</p>
+      </div>
+
+      <div class="relationship-panel" aria-label="Synthetic BLLB LTD operational relationships">
+        <div class="relationship-focus">
+          <span class="source-type">Customer anchor</span>
+          <h3>ABC Ltd</h3>
+          <p>Primary customer record for the blocked Leeds install. Bob links related records only when the source trail is visible.</p>
+          <div class="source-tags">
+            <span>CRM</span>
+            <span>Operations</span>
+            <span>Mailbox</span>
+            <span>Finance</span>
+          </div>
+        </div>
+
+        <div class="relationship-list">
+          <article class="relationship-row">
+            <div>
+              <h3>Duplicate CRM record</h3>
+              <p><strong>Why linked:</strong> ABC Limited shares the Leeds location, account manager and renewal date with ABC Ltd.</p>
+              <p class="relationship-uncertain">Uncertain link: ABC Limited may match ABC Ltd based on VAT number and postcode.</p>
+            </div>
+            <div class="relationship-meta">
+              <span class="source-type">CRM</span>
+              <span class="status needs-review">Needs review</span>
+            </div>
+          </article>
+
+          <article class="relationship-row">
+            <div>
+              <h3>Missing PO email thread</h3>
+              <p><strong>Why linked:</strong> The mailbox subject names ABC Ltd and finance says the account cannot be released without a PO reference.</p>
+            </div>
+            <div class="relationship-meta">
+              <span class="source-type">Mailbox</span>
+              <span class="status likely">High confidence</span>
+            </div>
+          </article>
+
+          <article class="relationship-row">
+            <div>
+              <h3>Install board entry</h3>
+              <p><strong>Why linked:</strong> INS-2401 names ABC Ltd, shows status as blocked and notes "No PO; finance hold".</p>
+            </div>
+            <div class="relationship-meta">
+              <span class="source-type">Operations</span>
+              <span class="status confirmed">Confirmed</span>
+            </div>
+          </article>
+
+          <article class="relationship-row">
+            <div>
+              <h3>Disputed invoice</h3>
+              <p><strong>Why linked:</strong> Aged debtors shows INV-9104 for ABC Ltd on hold because there is no PO reference on the invoice.</p>
+            </div>
+            <div class="relationship-meta">
+              <span class="source-type">Finance</span>
+              <span class="status confirmed">Confirmed</span>
+            </div>
+          </article>
+
+          <article class="relationship-row">
+            <div>
+              <h3>Engineer assignment</h3>
+              <p><strong>Why linked:</strong> The install board assigns Ravi Singh as engineer, but the owner field is blank, so ownership still needs confirmation.</p>
+            </div>
+            <div class="relationship-meta">
+              <span class="source-type">Operations</span>
+              <span class="status needs-review">Needs review</span>
+            </div>
+          </article>
+
+          <article class="relationship-row">
+            <div>
+              <h3>Pricing spreadsheet</h3>
+              <p><strong>Why linked:</strong> Pricing files are relevant because duplicate customer and install records should be checked before commercial notes are updated.</p>
+            </div>
+            <div class="relationship-meta">
+              <span class="source-type">Spreadsheet</span>
+              <span class="status inferred">Inferred</span>
+            </div>
+          </article>
         </div>
       </div>
     </section>
