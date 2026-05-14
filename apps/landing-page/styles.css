@@ -1007,12 +1007,61 @@ button {
 }
 
 .early-access {
-  text-align: center;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.75fr);
+  gap: 28px;
+  align-items: start;
 }
 
-.early-access p {
-  margin-left: auto;
-  margin-right: auto;
+.pilot-copy p {
+  max-width: 720px;
+}
+
+.pilot-form {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--panel-soft);
+}
+
+.pilot-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.pilot-form input,
+.pilot-form select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: rgba(7, 12, 21, 0.82);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  padding: 0 12px;
+}
+
+.pilot-form input::placeholder {
+  color: var(--quiet);
+}
+
+.pilot-form input:focus,
+.pilot-form select:focus {
+  outline: 2px solid rgba(54, 211, 153, 0.34);
+  border-color: rgba(54, 211, 153, 0.74);
+}
+
+.pilot-note {
+  margin: 0;
+  color: var(--quiet);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 footer {
@@ -1051,6 +1100,7 @@ footer {
   .source-card-grid,
   .correction-grid,
   .relationship-panel,
+  .early-access,
   .trust-list {
     grid-template-columns: 1fr;
   }
@@ -1211,6 +1261,10 @@ footer {
   .button,
   button {
     width: 100%;
+  }
+
+  .pilot-form {
+    padding: 14px;
   }
 }
 

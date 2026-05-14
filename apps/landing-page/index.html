@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ask Bob - Your Operational AI Assistant</title>
   <meta name="description" content="Ask Bob is an operational AI assistant for real-world businesses. Discovery Mode helps surface trust, provenance and explainability without AI hype." />
-  <link rel="stylesheet" href="/styles.css?v=cloudflare-refresh-2026-05-14" />
+  <link rel="stylesheet" href="/styles.css?v=private-pilot-section" />
 </head>
 <body>
   <!-- Deployment refresh marker for Cloudflare Pages: 2026-05-14 -->
@@ -550,10 +550,36 @@
       </div>
     </section>
 
-    <section class="early-access" id="early-access">
-      <h2>Operational AI, without the fog machine.</h2>
-      <p>Ask Bob is early. The landing page tells the story while the core Bob platform stays separate, simple and deliberate.</p>
-      <a class="button secondary" href="mailto:hello@askbob.live">hello@askbob.live</a>
+    <section class="early-access" id="early-access" aria-labelledby="private-pilot-title">
+      <div class="pilot-copy">
+        <p class="eyebrow">Private Pilot</p>
+        <h2 id="private-pilot-title">Early access for controlled Discovery Mode pilots.</h2>
+        <p>AskBob is currently in early development. Private pilots will start small: one controlled data source first, clear source provenance, confidence labels and human approval before Bob learns from anything.</p>
+        <p>There is no public launch yet. The pilot is for teams who want to understand their operational data before they automate around it.</p>
+      </div>
+
+      <div class="pilot-form" aria-label="Private pilot request placeholder">
+        <label>
+          <span>Work email</span>
+          <input type="email" placeholder="name@company.co.uk" aria-label="Work email" />
+        </label>
+        <label>
+          <span>Company name</span>
+          <input type="text" placeholder="Your company" aria-label="Company name" />
+        </label>
+        <label>
+          <span>Main systems used</span>
+          <select aria-label="Main systems used">
+            <option>Microsoft 365 / SharePoint</option>
+            <option>Sage</option>
+            <option>CRM</option>
+            <option>File shares</option>
+            <option>Spreadsheets</option>
+          </select>
+        </label>
+        <button type="button">Request private pilot</button>
+        <p class="pilot-note">Private pilot requests are not submitted yet — this is a visual placeholder.</p>
+      </div>
     </section>
   </main>
 
