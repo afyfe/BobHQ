@@ -95,10 +95,12 @@ footer {
 nav {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: clamp(10px, 1.6vw, 22px);
   color: var(--muted);
   font-size: 14px;
   font-weight: 650;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 nav a {
@@ -164,6 +166,10 @@ section h2 {
 .hero-copy p:not(.eyebrow),
 .story p,
 .discovery p,
+.demo-flow-intro p:not(.eyebrow),
+.ask-bob-intro p:not(.eyebrow),
+.bob-answer-intro p:not(.eyebrow),
+.memory-intro p:not(.eyebrow),
 .report-intro p:not(.eyebrow),
 .early-access p {
   max-width: 680px;
@@ -510,6 +516,13 @@ button.quiet:focus-visible {
 .status.needs-review {
   background: var(--amber-soft);
   color: #ffd690;
+}
+
+.status,
+.source-tags span,
+.step-note {
+  max-width: 100%;
+  text-wrap: balance;
 }
 
 .bob-answer-demo {
@@ -919,10 +932,18 @@ footer {
 }
 
 @media (max-width: 900px) {
+  .site-header {
+    align-items: flex-start;
+  }
+
+  nav {
+    display: none;
+  }
+
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
-    padding-top: 34px;
+    padding: 34px 0 48px;
   }
 
   .answer-panel {
@@ -947,17 +968,15 @@ footer {
   .flow-step::after {
     display: none;
   }
+
+  .source-card,
+  .query-card,
+  .memory-item {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 760px) {
-  .site-header {
-    align-items: flex-start;
-  }
-
-  nav {
-    display: none;
-  }
-
   .story,
   .discovery,
   .demo-flow-intro,
@@ -981,6 +1000,18 @@ footer {
     padding: 24px;
   }
 
+  .story,
+  .discovery,
+  .demo-flow,
+  .ask-bob-demo,
+  .bob-answer-demo,
+  .operational-memory,
+  .discovery-report,
+  .trust,
+  .early-access {
+    margin-bottom: 20px;
+  }
+
   .report-header {
     flex-direction: column;
   }
@@ -1002,12 +1033,12 @@ footer {
   }
 
   h1 {
-    font-size: clamp(56px, 21vw, 84px);
+    font-size: clamp(52px, 20vw, 78px);
   }
 
   .hero h2,
   section h2 {
-    font-size: clamp(30px, 12vw, 44px);
+    font-size: clamp(28px, 11vw, 40px);
   }
 
   .hero-copy p:not(.eyebrow),
@@ -1022,6 +1053,56 @@ footer {
     font-size: 18px;
   }
 
+  .brand {
+    font-size: 17px;
+  }
+
+  .brand img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .hero {
+    gap: 28px;
+    padding-bottom: 38px;
+  }
+
+  .answer-panel,
+  .query-card,
+  .answer-summary,
+  .evidence-group,
+  .source-card,
+  .memory-item,
+  .memory-correction,
+  .report-row {
+    padding: 16px;
+  }
+
+  .story,
+  .discovery,
+  .demo-flow,
+  .ask-bob-demo,
+  .bob-answer-demo,
+  .operational-memory,
+  .discovery-report,
+  .trust,
+  .early-access {
+    padding: 18px;
+  }
+
+  .memory-timeline {
+    padding-left: 14px;
+  }
+
+  .memory-item::before {
+    left: -20px;
+  }
+
+  .report-status,
+  .status {
+    white-space: normal;
+  }
+
   .report-actions {
     display: grid;
   }
@@ -1029,5 +1110,32 @@ footer {
   .button,
   button {
     width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-header,
+  main,
+  footer {
+    width: min(100% - 20px, var(--container));
+  }
+
+  .hero h2,
+  section h2 {
+    font-size: 28px;
+  }
+
+  .query-button,
+  .answer-summary p,
+  .hero-copy p:not(.eyebrow),
+  .story p,
+  .discovery p,
+  .demo-flow-intro p:not(.eyebrow),
+  .ask-bob-intro p:not(.eyebrow),
+  .bob-answer-intro p:not(.eyebrow),
+  .memory-intro p:not(.eyebrow),
+  .report-intro p:not(.eyebrow),
+  .early-access p {
+    font-size: 17px;
   }
 }
