@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ask Bob - Your Operational AI Assistant</title>
   <meta name="description" content="Ask Bob is an operational AI assistant for real-world businesses. Discovery Mode helps surface trust, provenance and explainability without AI hype." />
-  <link rel="stylesheet" href="/styles.css?v=rebuild-full-landing-page" />
+  <link rel="stylesheet" href="/styles.css?v=ask-bob-query-demo" />
 </head>
 <body>
   <header class="site-header">
@@ -17,6 +17,7 @@
       <a href="#story">Story</a>
       <a href="#discovery">Discovery Mode</a>
       <a href="#demo-flow">Demo</a>
+      <a href="#ask-bob">Ask Bob</a>
       <a href="#discovery-report">Report</a>
       <a href="#trust">Trust</a>
       <a href="#early-access">Early access</a>
@@ -115,6 +116,78 @@
           <h3>Human approves what Bob learns from</h3>
           <p>A person reviews the synthetic discovery list and chooses which sources are trusted.</p>
           <span class="step-note">Customer controlled</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="ask-bob-demo" id="ask-bob" aria-labelledby="ask-bob-title">
+      <div class="ask-bob-intro">
+        <div>
+          <p class="eyebrow">Ask Bob</p>
+          <h2 id="ask-bob-title">Operational questions, with sources attached.</h2>
+        </div>
+        <p>Bob answers from approved operational sources, separates facts from assumptions, and shows when a person should review the result.</p>
+      </div>
+
+      <div class="query-grid" aria-label="Example operational questions and Bob responses">
+        <article class="query-card">
+          <div class="query-button">Why hasn't ABC Ltd been installed?</div>
+          <div class="source-tags" aria-label="Sources used">
+            <span>SharePoint</span>
+            <span>Outlook</span>
+            <span>Sage</span>
+          </div>
+          <div class="bob-response">
+            <span class="status likely">Likely</span>
+            <p><strong>Facts:</strong> The signed agreement is in SharePoint. An Outlook thread asks for a purchase order number. Sage shows the account on finance hold.</p>
+            <p><strong>Reasoning:</strong> The installation appears blocked because the PO number has not been supplied and finance has not released the account.</p>
+            <p><strong>Assumption:</strong> The latest email thread is the active blocker. Ask operations to confirm before updating the customer.</p>
+          </div>
+        </article>
+
+        <article class="query-card">
+          <div class="query-button">Where is the latest customer pricing sheet?</div>
+          <div class="source-tags" aria-label="Sources used">
+            <span>SharePoint</span>
+            <span>Spreadsheet</span>
+            <span>CRM</span>
+          </div>
+          <div class="bob-response">
+            <span class="status confirmed">Confirmed</span>
+            <p><strong>Facts:</strong> The newest approved file is stored in the Sales Operations SharePoint site and was linked from the CRM pricing note.</p>
+            <p><strong>Reasoning:</strong> It has the latest modified date and matches the approved naming pattern used by the commercial team.</p>
+            <p><strong>Assumption:</strong> No assumption needed, but older copies should remain read-only to avoid confusion.</p>
+          </div>
+        </article>
+
+        <article class="query-card">
+          <div class="query-button">Which customers are due renewal this month?</div>
+          <div class="source-tags" aria-label="Sources used">
+            <span>CRM</span>
+            <span>Spreadsheet</span>
+            <span>Outlook</span>
+          </div>
+          <div class="bob-response">
+            <span class="status needs-review">Needs review</span>
+            <p><strong>Facts:</strong> The CRM renewal view lists eight accounts this month. A spreadsheet maintained by account managers lists nine.</p>
+            <p><strong>Reasoning:</strong> One customer appears in the spreadsheet but not the CRM view, so the renewal list is not fully aligned.</p>
+            <p><strong>Assumption:</strong> The spreadsheet may include an informal renewal extension. Sales should approve the final list.</p>
+          </div>
+        </article>
+
+        <article class="query-card">
+          <div class="query-button">Why was the invoice rejected?</div>
+          <div class="source-tags" aria-label="Sources used">
+            <span>Sage</span>
+            <span>Outlook</span>
+            <span>SharePoint</span>
+          </div>
+          <div class="bob-response">
+            <span class="status likely">Likely</span>
+            <p><strong>Facts:</strong> Sage records the invoice as rejected. Outlook contains a supplier email requesting a corrected billing address. The contract PDF shows the older address.</p>
+            <p><strong>Reasoning:</strong> The rejection is likely due to an address mismatch between the invoice and supplier records.</p>
+            <p><strong>Assumption:</strong> The supplier email is the rejection reason. Finance should confirm before reissuing.</p>
+          </div>
         </article>
       </div>
     </section>
