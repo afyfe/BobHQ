@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ask Bob - Your Operational AI Assistant</title>
   <meta name="description" content="Ask Bob is an operational AI assistant for real-world businesses. Discovery Mode helps surface trust, provenance and explainability without AI hype." />
-  <link rel="stylesheet" href="/styles.css?v=bob-answer-demo" />
+  <link rel="stylesheet" href="/styles.css?v=operational-memory-demo" />
 </head>
 <body>
   <header class="site-header">
@@ -19,6 +19,7 @@
       <a href="#demo-flow">Demo</a>
       <a href="#ask-bob">Ask Bob</a>
       <a href="#bob-answer-demo">Answer</a>
+      <a href="#operational-memory">Memory</a>
       <a href="#discovery-report">Report</a>
       <a href="#trust">Trust</a>
       <a href="#early-access">Early access</a>
@@ -272,6 +273,92 @@
           <li>Confirm install owner</li>
           <li>Update CRM notes</li>
         </ul>
+      </div>
+    </section>
+
+    <section class="operational-memory" id="operational-memory" aria-labelledby="operational-memory-title">
+      <div class="memory-intro">
+        <div>
+          <p class="eyebrow">What Bob knows</p>
+          <h2 id="operational-memory-title">Operational memory that keeps its sources.</h2>
+        </div>
+        <p>Bob separates facts, assumptions and operational history. Memory builds over time, but every item keeps a source, status and confidence level.</p>
+      </div>
+
+      <div class="memory-timeline" aria-label="Synthetic BLLB LTD operational memory examples">
+        <article class="memory-item">
+          <div class="memory-meta">
+            <span class="source-type">Operations</span>
+            <span>2026-05-07 09:20</span>
+          </div>
+          <h3>ABC Ltd install delayed due to missing PO</h3>
+          <p>Install INS-2401 is blocked. Operations notes say "No PO; finance hold".</p>
+          <div class="memory-badges">
+            <span class="status confirmed">Confirmed</span>
+            <span class="status likely">High confidence</span>
+          </div>
+        </article>
+
+        <article class="memory-item">
+          <div class="memory-meta">
+            <span class="source-type">CRM</span>
+            <span>2026-05-08 11:45</span>
+          </div>
+          <h3>Duplicate customer record suspected</h3>
+          <p>CRM contains ABC Ltd and ABC Limited with the same town, account manager and renewal date.</p>
+          <div class="memory-badges">
+            <span class="status inferred">Inferred</span>
+            <span class="status needs-review">Needs review</span>
+          </div>
+        </article>
+
+        <article class="memory-item">
+          <div class="memory-meta">
+            <span class="source-type">Spreadsheet</span>
+            <span>2026-05-02 16:10</span>
+          </div>
+          <h3>Pricing exception approved by Maya Patel</h3>
+          <p>Hartley & Co Kitchens has a pricing exception noted outside CRM, so the account needs human review before renewal terms are sent.</p>
+          <div class="memory-badges">
+            <span class="status needs-review">Human approved</span>
+            <span class="status likely">Medium confidence</span>
+          </div>
+        </article>
+
+        <article class="memory-item">
+          <div class="memory-meta">
+            <span class="source-type">Finance</span>
+            <span>2026-05-06 14:30</span>
+          </div>
+          <h3>Renewal process updated after invoice dispute</h3>
+          <p>Pembroke Print Services should not renew automatically while invoice INV-9033 remains disputed.</p>
+          <div class="memory-badges">
+            <span class="status confirmed">Confirmed</span>
+            <span class="status likely">High confidence</span>
+          </div>
+        </article>
+
+        <article class="memory-item">
+          <div class="memory-meta">
+            <span class="source-type">Mailbox</span>
+            <span>2026-05-07 15:05</span>
+          </div>
+          <h3>Engineer reassignment caused install ownership confusion</h3>
+          <p>Silver Birch Nursery shows Steve as owner, but the email thread says ownership was not formally handed over.</p>
+          <div class="memory-badges">
+            <span class="status inferred">Inferred</span>
+            <span class="status needs-review">Needs review</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="memory-correction">
+        <span class="source-type">Correction example</span>
+        <h3>Bob updates the working explanation when better evidence appears.</h3>
+        <div class="correction-grid">
+          <p><strong>Initial assumption:</strong> install delayed due to stock shortage.</p>
+          <p><strong>Updated conclusion after email review:</strong> missing PO number.</p>
+        </div>
       </div>
     </section>
 
