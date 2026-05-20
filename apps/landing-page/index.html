@@ -3,51 +3,78 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AskBob — Operational AI for SMEs</title>
+    <title>AskBob - Operational AI for SMEs</title>
     <meta
       name="description"
       content="AskBob is a grounded AI assistant for small and medium-sized businesses. Coming soon."
     />
-    <style>
-      :root { color-scheme: light; --bg: #f4f0e8; --paper: #fffaf0; --ink: #1d2520; --muted: #5d675f; --line: rgba(29,37,32,.14); --accent: #2f5f4a; --accent-strong: #173b2d; --accent-soft: #dce8dd; --shadow: 0 24px 80px rgba(29,37,32,.12); }
-      * { box-sizing: border-box; }
-      html { min-width: 320px; background: var(--bg); }
-      body { margin: 0; min-height: 100vh; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: radial-gradient(circle at 14% 16%, rgba(47,95,74,.16), transparent 28rem), radial-gradient(circle at 86% 18%, rgba(122,93,54,.12), transparent 26rem), linear-gradient(135deg, #f8f3ea 0%, #efe7dc 100%); line-height: 1.55; }
-      main { display: grid; min-height: 100vh; padding: 28px; place-items: center; }
-      .page { width: min(100%, 1040px); }
-      .card { position: relative; overflow: hidden; padding: clamp(28px, 7vw, 76px); border: 1px solid var(--line); border-radius: clamp(24px, 4vw, 44px); background: rgba(255,250,240,.84); box-shadow: var(--shadow); }
-      .card::before { position: absolute; inset: 0; pointer-events: none; content: ""; background: linear-gradient(90deg, rgba(255,255,255,.42), transparent 28%), radial-gradient(circle at 88% 84%, rgba(47,95,74,.12), transparent 18rem); }
-      .content { position: relative; display: grid; gap: clamp(32px, 6vw, 70px); grid-template-columns: minmax(0, 1fr) 280px; align-items: end; }
-      .kicker { display: inline-flex; width: fit-content; align-items: center; gap: 10px; margin-bottom: 28px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--accent-strong); background: rgba(220,232,221,.58); font-size: .9rem; font-weight: 700; }
-      .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--accent); }
-      h1, p { margin: 0; }
-      h1 { max-width: 10ch; font-size: clamp(4.5rem, 14vw, 10rem); line-height: .84; letter-spacing: -.09em; }
-      .subtitle { margin-top: 24px; color: var(--accent-strong); font-size: clamp(1.35rem, 3vw, 2.4rem); font-weight: 760; letter-spacing: -.045em; }
-      .strapline { width: fit-content; margin-top: 18px; padding: 10px 14px; border-radius: 999px; color: #fffaf0; background: var(--ink); font-size: clamp(1rem, 1.8vw, 1.2rem); font-weight: 800; letter-spacing: -.02em; }
-      .description { max-width: 680px; margin-top: 30px; color: var(--muted); font-size: clamp(1.1rem, 2vw, 1.35rem); }
-      .coming-soon { margin-top: 30px; color: var(--ink); font-size: clamp(1.2rem, 2.2vw, 1.55rem); font-weight: 800; }
-      .callout { padding: 22px; border: 1px solid rgba(47,95,74,.22); border-radius: 24px; color: var(--accent-strong); background: rgba(220,232,221,.7); font-size: 1.05rem; font-weight: 750; }
-      .domain { display: inline-flex; margin-top: 18px; color: var(--muted); font-size: .98rem; font-weight: 700; }
-      @media (max-width: 780px) { main { padding: 18px; place-items: stretch; } .page { display: grid; min-height: calc(100vh - 36px); } .card { display: grid; align-content: center; } .content { grid-template-columns: 1fr; align-items: start; } h1 { max-width: none; } .strapline { border-radius: 18px; } }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <header class="site-header" aria-label="Site header">
+      <a class="brand" href="index.html" aria-label="AskBob home">
+        <img src="public/assets/askbob-mark.svg" alt="" width="38" height="38" />
+        <span>AskBob</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="what-is-askbob.html">What is AskBob?</a>
+        <a href="built-for-messy-businesses.html">Messy businesses</a>
+        <a href="operational-knowledge-loss.html">Knowledge loss</a>
+        <a href="discovery-mode.html">Discovery Mode</a>
+      </nav>
+    </header>
+
     <main aria-labelledby="page-title">
-      <section class="page">
-        <div class="card">
-          <div class="content">
+      <section class="page-shell">
+        <div class="hero-card">
+          <div class="content-grid">
             <div>
               <p class="kicker"><span class="dot" aria-hidden="true"></span>askbob.live</p>
               <h1 id="page-title">AskBob</h1>
               <p class="subtitle">Operational AI for SMEs</p>
-              <p class="strapline">Not Another AI Hype Machine</p>
-              <p class="description">We’re building a grounded AI assistant that helps small and medium-sized businesses understand their operations, find knowledge, and make better decisions.</p>
+              <p class="strapline">Not another AI hype machine</p>
+              <p class="description">
+                We are building a grounded AI assistant that helps small and medium-sized businesses
+                understand their operations, find knowledge, and make better decisions.
+              </p>
               <p class="coming-soon">Coming soon.</p>
             </div>
-            <aside class="callout" aria-label="AskBob focus">Built for real businesses, messy systems, and practical people.<span class="domain">AskBob · askbob.live</span></aside>
+            <aside class="callout" aria-label="AskBob focus">
+              Built for real businesses, messy systems, and practical people.
+              <span class="domain">AskBob &middot; askbob.live</span>
+            </aside>
           </div>
         </div>
       </section>
+
+      <section class="page-links" aria-label="AskBob topics">
+        <a href="what-is-askbob.html">
+          <span>What is AskBob?</span>
+          <strong>A plain-language introduction to the product idea.</strong>
+        </a>
+        <a href="built-for-messy-businesses.html">
+          <span>Built for messy businesses</span>
+          <strong>Why AskBob starts with operational reality, not tidy demos.</strong>
+        </a>
+        <a href="operational-knowledge-loss.html">
+          <span>Operational knowledge loss</span>
+          <strong>The everyday risk of decisions, context, and history going missing.</strong>
+        </a>
+        <a href="discovery-mode.html">
+          <span>Discovery Mode</span>
+          <strong>A practical first step before deeper operational work.</strong>
+        </a>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <span>AskBob &middot; askbob.live</span>
+      <nav aria-label="Footer navigation">
+        <a href="what-is-askbob.html">What is AskBob?</a>
+        <a href="built-for-messy-businesses.html">Messy businesses</a>
+        <a href="operational-knowledge-loss.html">Knowledge loss</a>
+        <a href="discovery-mode.html">Discovery Mode</a>
+      </nav>
+    </footer>
   </body>
 </html>

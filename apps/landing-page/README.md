@@ -45,7 +45,13 @@ No build tooling is required. Deploy the folder as static HTML/CSS using any sim
 ```text
 apps/landing-page/
   index.html
+  what-is-askbob.html
+  built-for-messy-businesses.html
+  operational-knowledge-loss.html
+  discovery-mode.html
   styles.css
+  sitemap.xml
+  robots.txt
   README.md
   public/
     assets/
