@@ -6,9 +6,130 @@
     <title>Built for Messy Businesses - AskBob</title>
     <meta
       name="description"
-      content="AskBob is being shaped around the messy operational reality of small and medium-sized businesses."
+      content="AskBob is built for the operationally messy reality of SMEs: old systems, spreadsheets, file shares, undocumented processes, and knowledge held by people."
     />
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .messy-page {
+        display: grid;
+        gap: 24px;
+      }
+
+      .messy-hero {
+        align-items: center;
+      }
+
+      .messy-hero h1 {
+        max-width: 9ch;
+      }
+
+      .messy-summary {
+        display: grid;
+        gap: 18px;
+      }
+
+      .messy-summary p {
+        margin: 0;
+      }
+
+      .messy-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .messy-links a,
+      .messy-section a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--accent-strong);
+        background: rgba(220, 232, 221, 0.54);
+        font-size: 0.95rem;
+        font-weight: 800;
+      }
+
+      .messy-section {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.42fr) minmax(0, 1fr);
+        gap: clamp(22px, 5vw, 54px);
+        padding: clamp(28px, 5vw, 48px);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 250, 240, 0.72);
+      }
+
+      .messy-section h2,
+      .messy-callout h2 {
+        margin: 0;
+        color: var(--accent-strong);
+        line-height: 1.08;
+      }
+
+      .messy-section h2 {
+        font-size: clamp(1.7rem, 3vw, 2.5rem);
+      }
+
+      .messy-section p {
+        margin-bottom: 16px;
+      }
+
+      .messy-section p:last-child {
+        margin-bottom: 0;
+      }
+
+      .messy-list {
+        display: grid;
+        gap: 12px;
+        margin: 20px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .messy-list li {
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.42);
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .messy-list strong {
+        color: var(--accent-strong);
+      }
+
+      .messy-callout {
+        padding: clamp(24px, 5vw, 42px);
+        border: 1px solid rgba(47, 95, 74, 0.22);
+        border-radius: var(--radius);
+        background: rgba(220, 232, 221, 0.72);
+      }
+
+      .messy-callout h2 {
+        margin-bottom: 14px;
+        font-size: clamp(1.8rem, 4vw, 3rem);
+      }
+
+      .messy-callout p {
+        max-width: 780px;
+        margin: 0;
+      }
+
+      @media (max-width: 760px) {
+        .messy-section {
+          grid-template-columns: 1fr;
+        }
+
+        .messy-hero h1 {
+          max-width: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <header class="site-header" aria-label="Site header">
@@ -24,26 +145,146 @@
       </nav>
     </header>
 
-    <main aria-labelledby="page-title">
+    <main class="messy-page" aria-labelledby="page-title">
       <section class="page-panel">
-        <div class="page-hero">
+        <div class="page-hero messy-hero">
           <div>
             <p class="kicker"><span class="dot" aria-hidden="true"></span>Operational reality</p>
             <h1 id="page-title">Built for messy businesses</h1>
           </div>
+          <div class="messy-summary">
+            <p>
+              AskBob starts with a simple observation: most SMEs are not broken because they are
+              messy. They are messy because they have survived, adapted, hired people, lost people,
+              changed systems, and kept serving customers while all of that happened.
+            </p>
+            <p>
+              The work still gets done. Orders go out. Customers get called back. Month end closes.
+              Someone knows which spreadsheet matters. Someone knows which folder is safe to trust.
+              Someone knows why the process says one thing and the business does another.
+            </p>
+            <div class="messy-links" aria-label="Related pages">
+              <a href="index.html">Home</a>
+              <a href="what-is-askbob.html">What is AskBob?</a>
+              <a href="operational-knowledge-loss.html">Knowledge loss</a>
+              <a href="discovery-mode.html">Discovery Mode</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="messy-section" aria-labelledby="not-clean-room">
+        <h2 id="not-clean-room">Not clean-room operations</h2>
+        <div>
           <p>
-            Most businesses do not run from a perfect system of record. Work is spread across
-            inboxes, spreadsheets, chat, documents, calls, and memory.
+            Real businesses rarely look like the diagram. They have a CRM that was introduced
+            three managers ago, a Sage setup that finance understands better than anyone else,
+            shared drives full of old versions, and old servers in the corner that nobody wants
+            to reboot during trading hours.
+          </p>
+          <p>
+            There are forms that are technically obsolete but still useful. There are job sheets,
+            customer trackers, price lists, renewal notes, and handover documents with names like
+            "final-final-v3". There is usually a perfectly good reason for each one.
           </p>
         </div>
+      </section>
 
-        <div class="page-copy">
-          <ul class="note-list">
-            <li>Important context often lives outside the official process.</li>
-            <li>Different teams use different names for the same customer, supplier, or project.</li>
-            <li>Decisions are made with partial information and cleaned up later.</li>
+      <section class="messy-section" aria-labelledby="where-work-lives">
+        <h2 id="where-work-lives">Where the work really lives</h2>
+        <div>
+          <p>
+            The official process might be in one system, but the operational truth is often spread
+            across several places. Some of it is structured. Some of it is not. Some of it is in a
+            spreadsheet because that was the fastest way to solve the problem at the time.
+          </p>
+          <ul class="messy-list">
+            <li><strong>Disconnected systems:</strong> CRM records, finance data, job history, stock notes, and customer emails that do not quite line up.</li>
+            <li><strong>File shares:</strong> SharePoint folders, network drives, PDFs, scans, and old templates that still carry business-critical context.</li>
+            <li><strong>Spreadsheets:</strong> trackers, imports, exception lists, forecasts, pricing sheets, and "temporary" tools that became permanent.</li>
+            <li><strong>Legacy systems:</strong> old databases and servers that still answer questions nobody has rebuilt elsewhere.</li>
           </ul>
         </div>
+      </section>
+
+      <section class="messy-section" aria-labelledby="dave-knows">
+        <h2 id="dave-knows">"Dave knows how it works"</h2>
+        <div>
+          <p>
+            Every SME has some version of Dave. It might be Sarah in finance, Imran in operations,
+            Jo on customer service, or the person who has been quietly fixing the same awkward
+            exception for eight years.
+          </p>
+          <p>
+            That tribal knowledge is valuable. It is also fragile. When the answer depends on
+            finding the right person at the right time, the business is carrying risk it may not be
+            able to see. AskBob is interested in making that knowledge easier to find, easier to
+            question, and easier to pass on without pretending people are the problem.
+          </p>
+        </div>
+      </section>
+
+      <section class="messy-section" aria-labelledby="chaos-that-runs">
+        <h2 id="chaos-that-runs">Chaos that still runs</h2>
+        <div>
+          <p>
+            Operational chaos is not always failure. Sometimes it is the history of practical
+            decisions made under pressure. A workaround kept a customer. A spreadsheet saved a
+            department. A file share became the place people trusted because the official system
+            did not quite fit the work.
+          </p>
+          <p>
+            The danger comes later, when nobody can tell which parts are deliberate, which parts are
+            accidental, and which parts are now holding the business together through habit alone.
+          </p>
+        </div>
+      </section>
+
+      <section class="messy-section" aria-labelledby="askbob-position">
+        <h2 id="askbob-position">How AskBob fits</h2>
+        <div>
+          <p>
+            AskBob is designed for imperfect environments. It should not require a business to
+            clean everything up before it can be useful. It should help people understand what is
+            already there: the systems, documents, exceptions, relationships, gaps, and judgement
+            calls that shape the day-to-day operation.
+          </p>
+          <p>
+            That means being practical about sources, honest about uncertainty, and respectful of
+            the people who know the business. AskBob should help teams see the shape of their
+            operation more clearly before they decide what to fix, migrate, document, automate, or
+            leave alone.
+          </p>
+        </div>
+      </section>
+
+      <section class="messy-callout" aria-labelledby="built-for-imperfect">
+        <h2 id="built-for-imperfect">Built for the business you actually have</h2>
+        <p>
+          AskBob is not being built for perfect data, perfect process, or perfect documentation.
+          It is being built for the place most SMEs really are: capable people, mixed systems,
+          patched processes, useful spreadsheets, old knowledge, and enough operational noise that
+          understanding the business is often the hardest part of improving it.
+        </p>
+      </section>
+
+      <section class="page-links" aria-label="Continue reading">
+        <a href="index.html">
+          <span>Return home</span>
+          <strong>Back to the main AskBob landing page.</strong>
+        </a>
+        <a href="what-is-askbob.html">
+          <span>What is AskBob?</span>
+          <strong>The broader idea behind grounded operational intelligence.</strong>
+        </a>
+        <a href="operational-knowledge-loss.html">
+          <span>Operational knowledge loss</span>
+          <strong>How context disappears across people, systems, and time.</strong>
+        </a>
+        <a href="discovery-mode.html">
+          <span>Discovery Mode</span>
+          <strong>A practical starting point for finding what the business already knows.</strong>
+        </a>
       </section>
     </main>
 
