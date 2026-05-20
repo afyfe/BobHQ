@@ -6,9 +6,129 @@
     <title>What is AskBob? - AskBob</title>
     <meta
       name="description"
-      content="A plain-language introduction to AskBob, a grounded operational AI assistant for small and medium-sized businesses."
+      content="A thoughtful introduction to AskBob, grounded operational intelligence for SMEs with fragmented systems and practical knowledge loss."
     />
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .what-page {
+        display: grid;
+        gap: 24px;
+      }
+
+      .what-page .page-panel {
+        box-shadow: 0 18px 54px rgba(29, 37, 32, 0.1);
+      }
+
+      .what-hero {
+        align-items: center;
+      }
+
+      .what-hero h1 {
+        max-width: 8ch;
+      }
+
+      .hero-summary {
+        display: grid;
+        gap: 18px;
+      }
+
+      .hero-summary p {
+        margin: 0;
+      }
+
+      .hero-links,
+      .internal-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .hero-links a,
+      .internal-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--accent-strong);
+        background: rgba(220, 232, 221, 0.54);
+        font-size: 0.95rem;
+        font-weight: 800;
+      }
+
+      .what-section {
+        display: grid;
+        grid-template-columns: minmax(180px, 0.42fr) minmax(0, 1fr);
+        gap: clamp(22px, 5vw, 54px);
+        padding: clamp(28px, 5vw, 48px);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 250, 240, 0.72);
+      }
+
+      .what-section h2 {
+        margin: 0;
+        color: var(--accent-strong);
+        font-size: clamp(1.7rem, 3vw, 2.5rem);
+        line-height: 1.08;
+      }
+
+      .what-section p {
+        margin-bottom: 16px;
+      }
+
+      .what-section p:last-child {
+        margin-bottom: 0;
+      }
+
+      .example-list {
+        display: grid;
+        gap: 12px;
+        margin: 20px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .example-list li {
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.42);
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .what-callout {
+        padding: clamp(24px, 5vw, 42px);
+        border: 1px solid rgba(47, 95, 74, 0.22);
+        border-radius: var(--radius);
+        background: rgba(220, 232, 221, 0.72);
+      }
+
+      .what-callout h2 {
+        margin: 0 0 14px;
+        color: var(--accent-strong);
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        line-height: 1.08;
+      }
+
+      .what-callout p {
+        max-width: 760px;
+        margin: 0;
+      }
+
+      @media (max-width: 760px) {
+        .what-section {
+          grid-template-columns: 1fr;
+        }
+
+        .what-hero h1 {
+          max-width: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <header class="site-header" aria-label="Site header">
@@ -24,35 +144,149 @@
       </nav>
     </header>
 
-    <main aria-labelledby="page-title">
+    <main class="what-page" aria-labelledby="page-title">
       <section class="page-panel">
-        <div class="page-hero">
+        <div class="page-hero what-hero">
           <div>
-            <p class="kicker"><span class="dot" aria-hidden="true"></span>Plain introduction</p>
+            <p class="kicker"><span class="dot" aria-hidden="true"></span>Foundational view</p>
             <h1 id="page-title">What is AskBob?</h1>
           </div>
-          <p>
-            AskBob is an early product idea for helping SMEs ask practical questions about their
-            own operations, documents, decisions, and working context.
-          </p>
-        </div>
-
-        <div class="page-copy">
-          <div class="page-grid">
-            <article>
-              <h2>Operational</h2>
-              <p>Focused on how work actually happens across people, files, systems, and habits.</p>
-            </article>
-            <article>
-              <h2>Grounded</h2>
-              <p>Designed around source-aware answers, uncertainty, and review rather than guesswork.</p>
-            </article>
-            <article>
-              <h2>Practical</h2>
-              <p>Intended for everyday business questions before larger platform work is justified.</p>
-            </article>
+          <div class="hero-summary">
+            <p>
+              AskBob is grounded operational intelligence for small and medium-sized businesses:
+              a way to ask practical questions about how the business works, where knowledge
+              lives, and what evidence supports an answer.
+            </p>
+            <p>
+              It exists because many good businesses are run by capable people working around
+              fragmented systems, old processes, and information that was never written down
+              properly.
+            </p>
+            <div class="hero-links" aria-label="Related pages">
+              <a href="index.html">Home</a>
+              <a href="built-for-messy-businesses.html">Messy businesses</a>
+              <a href="operational-knowledge-loss.html">Knowledge loss</a>
+              <a href="discovery-mode.html">Discovery Mode</a>
+            </div>
           </div>
         </div>
+      </section>
+
+      <section class="what-section" aria-labelledby="why-askbob-exists">
+        <h2 id="why-askbob-exists">Why AskBob exists</h2>
+        <div>
+          <p>
+            SMEs often know more than their systems can show. The sales team may understand a
+            customer history that never made it into the CRM. Finance may know the real shape of
+            a supplier relationship because it appears in Sage and a few old emails. Operations
+            may rely on a spreadsheet that everyone trusts, even though nobody remembers who
+            first built it.
+          </p>
+          <p>
+            AskBob is being shaped around that reality. It is not about replacing judgement or
+            pretending every business can be made tidy overnight. It is about helping people ask
+            better questions of the knowledge they already have.
+          </p>
+        </div>
+      </section>
+
+      <section class="what-section" aria-labelledby="fragmented-systems">
+        <h2 id="fragmented-systems">The problem with fragmented systems</h2>
+        <div>
+          <p>
+            Most businesses do not have one clean source of truth. They have layers: SharePoint
+            folders, spreadsheets, Sage, CRMs, legacy systems, inboxes, chat threads, and the
+            memory of people who have been there long enough to know what the records really mean.
+          </p>
+          <p>
+            The difficulty is not just finding a file. It is understanding how the file relates
+            to the customer, order, supplier, job, complaint, renewal, exception, or promise in
+            front of you.
+          </p>
+          <ul class="example-list">
+            <li>A customer name is different in the CRM, the finance system, and the delivery spreadsheet.</li>
+            <li>A SharePoint folder has the latest contract, but the agreed exception is buried in email.</li>
+            <li>A legacy system holds job history, while the useful notes live in an unofficial tracker.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="what-section" aria-labelledby="knowledge-loss">
+        <h2 id="knowledge-loss">Operational knowledge loss</h2>
+        <div>
+          <p>
+            Knowledge loss in SMEs is rarely dramatic. It happens quietly. A person leaves. A
+            process changes without being documented. A spreadsheet is copied and renamed. A
+            workaround becomes normal. Months later, the business can still operate, but it takes
+            longer to answer basic questions with confidence.
+          </p>
+          <p>
+            That loss affects handovers, customer service, reporting, compliance, purchasing,
+            scheduling, and decisions about what to fix next. AskBob treats this as an operational
+            problem, not a technology fashion.
+          </p>
+        </div>
+      </section>
+
+      <section class="what-section" aria-labelledby="ai-for-understanding">
+        <h2 id="ai-for-understanding">AI should help people understand</h2>
+        <div>
+          <p>
+            AskBob starts from a simple position: AI should help people understand their business,
+            not remove them from it. The people in the business still carry the judgement,
+            responsibility, customer knowledge, and practical sense.
+          </p>
+          <p>
+            The useful role for AI is to gather context, show its working, point to sources,
+            highlight uncertainty, and make it easier for experienced people to see what is going
+            on. Good operational support should slow down when the evidence is thin.
+          </p>
+        </div>
+      </section>
+
+      <section class="what-section" aria-labelledby="not-generic-chatbot">
+        <h2 id="not-generic-chatbot">Not a generic chatbot</h2>
+        <div>
+          <p>
+            Generic AI chatbots are useful for drafting, summarising, and general questions. AskBob
+            is different in intent. It is concerned with the specific working knowledge of one
+            business: its records, terms, habits, exceptions, relationships, and operational history.
+          </p>
+          <p>
+            A generic chatbot might produce a polished answer. AskBob should be more interested in
+            whether the answer is grounded, which sources support it, what may be missing, and who
+            should check it before action is taken.
+          </p>
+        </div>
+      </section>
+
+      <section class="what-callout" aria-labelledby="grounded-intelligence">
+        <h2 id="grounded-intelligence">Grounded operational intelligence</h2>
+        <p>
+          Grounded operational intelligence means connecting questions to real business context:
+          documents, systems, decisions, exceptions, and the human knowledge around them. For
+          AskBob, the goal is not a clever answer in isolation. The goal is a clearer view of how
+          the business works, where confidence is justified, and where further review is needed.
+        </p>
+      </section>
+
+      <section class="page-links" aria-label="Continue reading">
+        <a href="index.html">
+          <span>Return home</span>
+          <strong>Back to the main AskBob landing page.</strong>
+        </a>
+        <a href="built-for-messy-businesses.html">
+          <span>Built for messy businesses</span>
+          <strong>Why operational reality matters more than clean demo data.</strong>
+        </a>
+        <a href="operational-knowledge-loss.html">
+          <span>Operational knowledge loss</span>
+          <strong>How context disappears across people, systems, and time.</strong>
+        </a>
+        <a href="discovery-mode.html">
+          <span>Discovery Mode</span>
+          <strong>A practical first step for finding what the business already knows.</strong>
+        </a>
       </section>
     </main>
 
