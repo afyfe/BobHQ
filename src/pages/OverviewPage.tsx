@@ -1,11 +1,23 @@
+import { useEffect, useState } from "react";
 import ActivityFeed from "../components/dashboard/ActivityFeed";
 import MetricCard from "../components/ui/MetricCard";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
-import { connectors, overviewMetrics, recentActivity, tenants } from "../data/mockDashboardData";
 import { formatNumber } from "../lib/status";
+import { getDashboardOverview } from "../services/dashboardService";
+import type { DashboardOverview } from "../types/dashboard";
 
 export default function OverviewPage() {
+  const [overview, setOverview] = useState<DashboardOverview | null>(null);
+
+  useEffect(() => {
+    void getDashboardOverview().then(setOverview);
+  }, []);
+
+  if (!overview) {
+    return null;
+  }
+
   return (
     <div className="page-stack">
       <PageHeader
@@ -15,7 +27,7 @@ export default function OverviewPage() {
       />
 
       <section className="metrics-grid">
-        {overviewMetrics.map((metric) => (
+        {overview.metrics.map((metric) => (
           <MetricCard key={metric.label} label={metric.label} value={metric.value} delta={metric.delta} />
         ))}
       </section>
@@ -29,7 +41,7 @@ export default function OverviewPage() {
             </div>
           </div>
           <div className="tenant-pulse">
-            {tenants.map((tenant) => (
+            {overview.tenants.map((tenant) => (
               <article key={tenant.id} className="tenant-row">
                 <div>
                   <h3>{tenant.name}</h3>
@@ -52,7 +64,7 @@ export default function OverviewPage() {
             </div>
           </div>
           <div className="connector-health">
-            {connectors.slice(0, 4).map((connector) => (
+            {overview.connectors.slice(0, 4).map((connector) => (
               <article key={connector.id}>
                 <div>
                   <h3>{connector.name}</h3>
@@ -65,7 +77,7 @@ export default function OverviewPage() {
         </section>
       </div>
 
-      <ActivityFeed items={recentActivity} />
+      <ActivityFeed items={overview.recentActivity} />
     </div>
   );
 }

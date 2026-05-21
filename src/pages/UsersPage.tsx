@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
-import { users, type User } from "../data/mockDashboardData";
+import { getUsers } from "../services/dashboardService";
+import type { User } from "../types/dashboard";
 
 const columns: Column<User>[] = [
   { key: "name", header: "User", render: (user) => <strong>{user.name}</strong> },
@@ -13,6 +15,12 @@ const columns: Column<User>[] = [
 ];
 
 export default function UsersPage() {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    void getUsers().then(setUsers);
+  }, []);
+
   return (
     <div className="page-stack">
       <PageHeader

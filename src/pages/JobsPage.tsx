@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
 import MetricCard from "../components/ui/MetricCard";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
-import { jobs, type Job } from "../data/mockDashboardData";
+import { getJobs } from "../services/dashboardService";
+import type { Job } from "../types/dashboard";
 
 const columns: Column<Job>[] = [
   { key: "id", header: "Job", render: (job) => <strong>{job.id}</strong> },
@@ -16,6 +18,12 @@ const columns: Column<Job>[] = [
 ];
 
 export default function JobsPage() {
+  const [jobs, setJobs] = useState<Job[]>([]);
+
+  useEffect(() => {
+    void getJobs().then(setJobs);
+  }, []);
+
   return (
     <div className="page-stack">
       <PageHeader

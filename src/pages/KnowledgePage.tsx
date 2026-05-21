@@ -1,10 +1,12 @@
+import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
-import { knowledgeSources, type KnowledgeSource } from "../data/mockDashboardData";
 import { formatNumber } from "../lib/status";
+import { getKnowledgeItems } from "../services/dashboardService";
+import type { KnowledgeItem } from "../types/dashboard";
 
-const columns: Column<KnowledgeSource>[] = [
+const columns: Column<KnowledgeItem>[] = [
   { key: "source", header: "Knowledge source", render: (source) => <strong>{source.source}</strong> },
   { key: "tenant", header: "Tenant", render: (source) => source.tenant },
   { key: "status", header: "Status", render: (source) => <StatusPill status={source.status} /> },
@@ -14,6 +16,12 @@ const columns: Column<KnowledgeSource>[] = [
 ];
 
 export default function KnowledgePage() {
+  const [knowledgeItems, setKnowledgeItems] = useState<KnowledgeItem[]>([]);
+
+  useEffect(() => {
+    void getKnowledgeItems().then(setKnowledgeItems);
+  }, []);
+
   return (
     <div className="page-stack">
       <PageHeader
@@ -21,7 +29,7 @@ export default function KnowledgePage() {
         title="Knowledge Index"
         description="Index composition and freshness across source systems before any backend wiring is introduced."
       />
-      <DataTable columns={columns} rows={knowledgeSources} getRowKey={(source) => source.id} />
+      <DataTable columns={columns} rows={knowledgeItems} getRowKey={(source) => source.id} />
     </div>
   );
 }

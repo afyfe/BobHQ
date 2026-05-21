@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
-import { auditRecords, type AuditRecord } from "../data/mockDashboardData";
+import { getAuditEntries } from "../services/dashboardService";
+import type { AuditEntry } from "../types/dashboard";
 
-const columns: Column<AuditRecord>[] = [
+const columns: Column<AuditEntry>[] = [
   { key: "question", header: "Question / action", render: (record) => <strong>{record.question}</strong> },
   { key: "tenant", header: "Tenant", render: (record) => record.tenant },
   { key: "user", header: "User", render: (record) => record.user },
@@ -14,6 +16,12 @@ const columns: Column<AuditRecord>[] = [
 ];
 
 export default function AuditPage() {
+  const [auditEntries, setAuditEntries] = useState<AuditEntry[]>([]);
+
+  useEffect(() => {
+    void getAuditEntries().then(setAuditEntries);
+  }, []);
+
   return (
     <div className="page-stack">
       <PageHeader
@@ -21,7 +29,7 @@ export default function AuditPage() {
         title="Audit / Explainability"
         description="Future audit trail for answers, actions, confidence, source grounding, and operator review."
       />
-      <DataTable columns={columns} rows={auditRecords} getRowKey={(record) => record.id} />
+      <DataTable columns={columns} rows={auditEntries} getRowKey={(record) => record.id} />
     </div>
   );
 }

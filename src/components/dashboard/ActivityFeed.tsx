@@ -1,4 +1,4 @@
-import type { Activity } from "../../data/mockDashboardData";
+import type { Activity } from "../../types/dashboard";
 import StatusPill from "../ui/StatusPill";
 
 type ActivityFeedProps = {

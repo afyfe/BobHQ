@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
-import { tenants, type Tenant } from "../data/mockDashboardData";
 import { formatNumber } from "../lib/status";
+import { getTenants } from "../services/dashboardService";
+import type { Tenant } from "../types/dashboard";
 
 const columns: Column<Tenant>[] = [
   { key: "name", header: "Tenant", render: (tenant) => <strong>{tenant.name}</strong> },
@@ -15,6 +17,12 @@ const columns: Column<Tenant>[] = [
 ];
 
 export default function TenantsPage() {
+  const [tenants, setTenants] = useState<Tenant[]>([]);
+
+  useEffect(() => {
+    void getTenants().then(setTenants);
+  }, []);
+
   return (
     <div className="page-stack">
       <PageHeader

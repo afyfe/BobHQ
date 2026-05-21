@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
-import { connectors, type Connector } from "../data/mockDashboardData";
 import { formatNumber } from "../lib/status";
+import { getConnectors } from "../services/dashboardService";
+import type { Connector } from "../types/dashboard";
 
 const columns: Column<Connector>[] = [
   { key: "name", header: "Connector", render: (connector) => <strong>{connector.name}</strong> },
@@ -15,6 +17,12 @@ const columns: Column<Connector>[] = [
 ];
 
 export default function ConnectorsPage() {
+  const [connectors, setConnectors] = useState<Connector[]>([]);
+
+  useEffect(() => {
+    void getConnectors().then(setConnectors);
+  }, []);
+
   return (
     <div className="page-stack">
       <PageHeader
