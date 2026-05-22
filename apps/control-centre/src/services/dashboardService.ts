@@ -1,14 +1,16 @@
 import { createMockApiClient } from "../lib/apiClient";
 import { mockDashboardDto } from "../data/mockDashboardData";
 import type {
-  Activity,
-  ActivityDto,
+  AttentionAlert,
+  AttentionAlertDto,
   AuditEntry,
   AuditEntryDto,
   Connector,
   ConnectorDto,
   DashboardDto,
   DashboardOverview,
+  DiscoveryFinding,
+  DiscoveryFindingDto,
   Job,
   JobDto,
   KnowledgeItem,
@@ -16,6 +18,8 @@ import type {
   Metric,
   Tenant,
   TenantDto,
+  TimelineEvent,
+  TimelineEventDto,
   User,
   UserDto,
 } from "../types/dashboard";
@@ -47,6 +51,9 @@ function mapConnector(dto: ConnectorDto): Connector {
     lastError: dto.lastErrorMessage ?? "-",
     itemsIndexed: dto.itemsIndexed,
     enabled: dto.enabled,
+    syncProgress: dto.syncProgressLabel ?? undefined,
+    lastSyncAge: dto.lastSyncAgeLabel,
+    failureCount: dto.failureCount,
   };
 }
 
@@ -73,15 +80,29 @@ function mapAuditEntry(dto: AuditEntryDto): AuditEntry {
     sourceCount: dto.sourceCount,
     timestamp: dto.timestampLabel,
     status: dto.status,
+    explainabilityStatus: dto.explainabilityStatus,
   };
 }
 
-function mapActivity(dto: ActivityDto): Activity {
+function mapAttentionAlert(dto: AttentionAlertDto): AttentionAlert {
   return {
     id: dto.id,
+    severity: dto.severity,
     title: dto.title,
-    detail: dto.detail,
+    tenant: dto.tenantName,
+    description: dto.description,
+    timestamp: dto.timestampLabel,
+    suggestedAction: dto.suggestedAction,
+  };
+}
+
+function mapTimelineEvent(dto: TimelineEventDto): TimelineEvent {
+  return {
+    id: dto.id,
     time: dto.timeLabel,
+    eventType: dto.eventType,
+    tenant: dto.tenantName,
+    description: dto.description,
     status: dto.status,
   };
 }
@@ -110,6 +131,17 @@ function mapUser(dto: UserDto): User {
   };
 }
 
+function mapDiscoveryFinding(dto: DiscoveryFindingDto): DiscoveryFinding {
+  return {
+    id: dto.id,
+    finding: dto.finding,
+    tenant: dto.tenantName,
+    severity: dto.severity,
+    confidence: dto.confidence,
+    recommendedAction: dto.recommendedAction,
+  };
+}
+
 function buildOverviewMetrics(dashboard: DashboardDto): Metric[] {
   const activeTenants = dashboard.tenants.filter((tenant) => tenant.status === "Active").length;
   const documentsIndexed = dashboard.knowledgeItems.reduce((total, item) => total + item.documentCount, 0);
@@ -125,6 +157,7 @@ function buildOverviewMetrics(dashboard: DashboardDto): Metric[] {
     { label: "Emails indexed", value: emailsIndexed, delta: dashboard.summary.emailsIndexedDeltaLabel },
     { label: "Jobs active", value: `${queued} / ${running} / ${failed}`, delta: "queued / running / failed" },
     { label: "AI requests today", value: dashboard.summary.aiRequestsToday, delta: dashboard.summary.explainabilityRateLabel },
+    { label: "Explainability Coverage", value: "98.7%", subtitle: "answers with traceable sources" },
   ];
 }
 
@@ -139,7 +172,8 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     metrics: buildOverviewMetrics(dashboard),
     tenants: dashboard.tenants.map(mapTenant),
     connectors: dashboard.connectors.map(mapConnector),
-    recentActivity: dashboard.recentActivity.map(mapActivity),
+    attentionAlerts: dashboard.attentionAlerts.map(mapAttentionAlert),
+    timelineEvents: dashboard.timelineEvents.map(mapTimelineEvent),
   };
 }
 
@@ -171,4 +205,9 @@ export async function getKnowledgeItems(): Promise<KnowledgeItem[]> {
 export async function getUsers(): Promise<User[]> {
   const dashboard = await getDashboardDto();
   return dashboard.users.map(mapUser);
+}
+
+export async function getDiscoveryFindings(): Promise<DiscoveryFinding[]> {
+  const dashboard = await getDashboardDto();
+  return dashboard.discoveryFindings.map(mapDiscoveryFinding);
 }

@@ -11,7 +11,10 @@ const columns: Column<Connector>[] = [
   { key: "tenant", header: "Tenant", render: (connector) => connector.tenant },
   { key: "status", header: "Status", render: (connector) => <StatusPill status={connector.status} /> },
   { key: "sync", header: "Last successful sync", render: (connector) => connector.lastSuccessfulSync },
+  { key: "age", header: "Last sync age", render: (connector) => connector.lastSyncAge },
+  { key: "progress", header: "Sync progress", render: (connector) => connector.syncProgress ?? "-" },
   { key: "error", header: "Last error", render: (connector) => connector.lastError },
+  { key: "failures", header: "Failures", render: (connector) => connector.failureCount },
   { key: "items", header: "Items indexed", render: (connector) => formatNumber(connector.itemsIndexed) },
   { key: "enabled", header: "Enabled", render: (connector) => (connector.enabled ? "Enabled" : "Disabled") },
 ];

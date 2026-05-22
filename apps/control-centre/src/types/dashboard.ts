@@ -2,9 +2,12 @@ export type TenantStatus = "Active" | "Paused" | "Warning";
 export type ConnectorStatus = "Healthy" | "Syncing" | "Degraded" | "Failed" | "Disabled";
 export type JobStatus = "Queued" | "Running" | "Completed" | "Failed";
 export type AuditStatus = "Completed" | "Partial" | "Failed";
-export type ActivityStatus = "Healthy" | "Warning" | "Failed" | "Running";
 export type KnowledgeStatus = "Indexed" | "Syncing" | "Warning";
 export type UserStatus = "Active" | "Invited" | "Disabled";
+export type AlertSeverity = "warning" | "critical" | "info";
+export type TimelineEventStatus = "Healthy" | "Running" | "Completed" | "Failed" | "Warning";
+export type ExplainabilityStatus = "Fully sourced" | "Partially sourced" | "Needs review";
+export type DiscoverySeverity = "warning" | "critical" | "info";
 
 export type TenantPlan = "Pilot" | "Growth" | "Enterprise";
 export type UserRole = "Owner" | "Operator" | "Analyst" | "Reviewer";
@@ -13,6 +16,7 @@ export type Metric = {
   label: string;
   value: string | number;
   delta?: string;
+  subtitle?: string;
 };
 
 export type TenantDto = {
@@ -46,6 +50,9 @@ export type ConnectorDto = {
   lastErrorMessage: string | null;
   itemsIndexed: number;
   enabled: boolean;
+  syncProgressLabel: string | null;
+  lastSyncAgeLabel: string;
+  failureCount: number;
 };
 
 export type Connector = {
@@ -57,6 +64,9 @@ export type Connector = {
   lastError: string;
   itemsIndexed: number;
   enabled: boolean;
+  syncProgress?: string;
+  lastSyncAge: string;
+  failureCount: number;
 };
 
 export type JobDto = {
@@ -90,6 +100,7 @@ export type AuditEntryDto = {
   sourceCount: number;
   timestampLabel: string;
   status: AuditStatus;
+  explainabilityStatus: ExplainabilityStatus;
 };
 
 export type AuditEntry = {
@@ -101,22 +112,45 @@ export type AuditEntry = {
   sourceCount: number;
   timestamp: string;
   status: AuditStatus;
+  explainabilityStatus: ExplainabilityStatus;
 };
 
-export type ActivityDto = {
+export type AttentionAlertDto = {
   id: string;
+  severity: AlertSeverity;
   title: string;
-  detail: string;
+  tenantName: string;
+  description: string;
+  timestampLabel: string;
+  suggestedAction: string;
+};
+
+export type AttentionAlert = {
+  id: string;
+  severity: AlertSeverity;
+  title: string;
+  tenant: string;
+  description: string;
+  timestamp: string;
+  suggestedAction: string;
+};
+
+export type TimelineEventDto = {
+  id: string;
   timeLabel: string;
-  status: ActivityStatus;
+  eventType: string;
+  tenantName: string;
+  description: string;
+  status: TimelineEventStatus;
 };
 
-export type Activity = {
+export type TimelineEvent = {
   id: string;
-  title: string;
-  detail: string;
   time: string;
-  status: ActivityStatus;
+  eventType: string;
+  tenant: string;
+  description: string;
+  status: TimelineEventStatus;
 };
 
 export type KnowledgeItemDto = {
@@ -159,11 +193,30 @@ export type User = {
   lastSeen: string;
 };
 
+export type DiscoveryFindingDto = {
+  id: string;
+  finding: string;
+  tenantName: string;
+  severity: DiscoverySeverity;
+  confidence: number;
+  recommendedAction: string;
+};
+
+export type DiscoveryFinding = {
+  id: string;
+  finding: string;
+  tenant: string;
+  severity: DiscoverySeverity;
+  confidence: number;
+  recommendedAction: string;
+};
+
 export type DashboardOverview = {
   metrics: Metric[];
   tenants: Tenant[];
   connectors: Connector[];
-  recentActivity: Activity[];
+  attentionAlerts: AttentionAlert[];
+  timelineEvents: TimelineEvent[];
 };
 
 export type DashboardSummaryDto = {
@@ -182,7 +235,9 @@ export type DashboardDto = {
   connectors: ConnectorDto[];
   jobs: JobDto[];
   auditEntries: AuditEntryDto[];
-  recentActivity: ActivityDto[];
+  attentionAlerts: AttentionAlertDto[];
+  timelineEvents: TimelineEventDto[];
   knowledgeItems: KnowledgeItemDto[];
   users: UserDto[];
+  discoveryFindings: DiscoveryFindingDto[];
 };

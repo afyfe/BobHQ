@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import ActivityFeed from "../components/dashboard/ActivityFeed";
+import ActivityTimeline from "../components/dashboard/ActivityTimeline";
+import AttentionRequired from "../components/dashboard/AttentionRequired";
 import MetricCard from "../components/ui/MetricCard";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
@@ -28,9 +29,17 @@ export default function OverviewPage() {
 
       <section className="metrics-grid">
         {overview.metrics.map((metric) => (
-          <MetricCard key={metric.label} label={metric.label} value={metric.value} delta={metric.delta} />
+          <MetricCard
+            key={metric.label}
+            label={metric.label}
+            value={metric.value}
+            delta={metric.delta}
+            subtitle={metric.subtitle}
+          />
         ))}
       </section>
+
+      <AttentionRequired alerts={overview.attentionAlerts} />
 
       <div className="split-grid">
         <section className="panel">
@@ -65,19 +74,23 @@ export default function OverviewPage() {
           </div>
           <div className="connector-health">
             {overview.connectors.slice(0, 4).map((connector) => (
-              <article key={connector.id}>
+              <article className={connector.status === "Syncing" ? "connector-health__syncing" : ""} key={connector.id}>
                 <div>
                   <h3>{connector.name}</h3>
-                  <p>{connector.tenant}</p>
+                  <p>{connector.tenant} / last sync {connector.lastSyncAge}</p>
+                  {connector.syncProgress ? <span>{connector.syncProgress}</span> : null}
                 </div>
-                <StatusPill status={connector.status} />
+                <div className="connector-health__meta">
+                  <StatusPill status={connector.status} />
+                  {connector.failureCount > 0 ? <span>{connector.failureCount} failures</span> : null}
+                </div>
               </article>
             ))}
           </div>
         </section>
       </div>
 
-      <ActivityFeed items={overview.recentActivity} />
+      <ActivityTimeline events={overview.timelineEvents} />
     </div>
   );
 }

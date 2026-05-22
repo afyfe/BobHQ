@@ -8,6 +8,7 @@ const navItems = [
   { label: "Jobs", to: "/jobs", icon: "J" },
   { label: "Knowledge", to: "/knowledge", icon: "K" },
   { label: "Audit", to: "/audit", icon: "A" },
+  { label: "Discovery", to: "/discovery", icon: "D" },
   { label: "Users", to: "/users", icon: "U" },
 ];
 
@@ -47,9 +48,11 @@ export default function AppShell({ children }: AppShellProps) {
           <div>
             <span className="topbar__label">Environment</span>
             <strong>Internal Preview</strong>
+            <span className="topbar__updated">Last updated 3 mins ago</span>
           </div>
           <div className="topbar__status">
             <span className="live-dot" aria-hidden="true" />
+            <span className="system-signal" aria-hidden="true" />
             Systems nominal
           </div>
         </header>

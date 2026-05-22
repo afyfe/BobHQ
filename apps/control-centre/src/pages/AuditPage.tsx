@@ -11,6 +11,7 @@ const columns: Column<AuditEntry>[] = [
   { key: "user", header: "User", render: (record) => record.user },
   { key: "confidence", header: "Confidence", render: (record) => `${Math.round(record.confidence * 100)}%` },
   { key: "sources", header: "Sources", render: (record) => record.sourceCount },
+  { key: "explainability", header: "Explainability", render: (record) => <StatusPill status={record.explainabilityStatus} /> },
   { key: "timestamp", header: "Timestamp", render: (record) => record.timestamp },
   { key: "status", header: "Status", render: (record) => <StatusPill status={record.status} /> },
 ];

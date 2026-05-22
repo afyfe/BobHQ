@@ -4,6 +4,7 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import App from "./App";
 import AuditPage from "./pages/AuditPage";
 import ConnectorsPage from "./pages/ConnectorsPage";
+import DiscoveryPage from "./pages/DiscoveryPage";
 import JobsPage from "./pages/JobsPage";
 import KnowledgePage from "./pages/KnowledgePage";
 import OverviewPage from "./pages/OverviewPage";
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: "jobs", element: <JobsPage /> },
       { path: "knowledge", element: <KnowledgePage /> },
       { path: "audit", element: <AuditPage /> },
+      { path: "discovery", element: <DiscoveryPage /> },
       { path: "users", element: <UsersPage /> },
     ],
   },

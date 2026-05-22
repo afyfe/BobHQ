@@ -43,6 +43,9 @@ const connectors: DashboardDto["connectors"] = [
     lastErrorMessage: null,
     itemsIndexed: 94620,
     enabled: true,
+    syncProgressLabel: null,
+    lastSyncAgeLabel: "6 min ago",
+    failureCount: 0,
   },
   {
     id: "conn-outlook",
@@ -53,6 +56,9 @@ const connectors: DashboardDto["connectors"] = [
     lastErrorMessage: null,
     itemsIndexed: 38120,
     enabled: true,
+    syncProgressLabel: "68% through mailbox delta",
+    lastSyncAgeLabel: "24 min ago",
+    failureCount: 0,
   },
   {
     id: "conn-sharepoint",
@@ -63,6 +69,9 @@ const connectors: DashboardDto["connectors"] = [
     lastErrorMessage: "Rate limit window exhausted",
     itemsIndexed: 31244,
     enabled: true,
+    syncProgressLabel: "Backoff window active",
+    lastSyncAgeLabel: "16 hrs ago",
+    failureCount: 2,
   },
   {
     id: "conn-slack",
@@ -73,6 +82,9 @@ const connectors: DashboardDto["connectors"] = [
     lastErrorMessage: "Disabled by operator",
     itemsIndexed: 6105,
     enabled: false,
+    syncProgressLabel: null,
+    lastSyncAgeLabel: "5 days ago",
+    failureCount: 0,
   },
   {
     id: "conn-notion",
@@ -83,6 +95,9 @@ const connectors: DashboardDto["connectors"] = [
     lastErrorMessage: "OAuth token expired",
     itemsIndexed: 8742,
     enabled: true,
+    syncProgressLabel: null,
+    lastSyncAgeLabel: "2 days ago",
+    failureCount: 4,
   },
 ];
 
@@ -139,6 +154,7 @@ const auditEntries: DashboardDto["auditEntries"] = [
     sourceCount: 18,
     timestampLabel: "Today 14:33",
     status: "Completed",
+    explainabilityStatus: "Fully sourced",
   },
   {
     id: "audit-2047",
@@ -149,6 +165,7 @@ const auditEntries: DashboardDto["auditEntries"] = [
     sourceCount: 11,
     timestampLabel: "Today 13:58",
     status: "Completed",
+    explainabilityStatus: "Fully sourced",
   },
   {
     id: "audit-2046",
@@ -159,37 +176,106 @@ const auditEntries: DashboardDto["auditEntries"] = [
     sourceCount: 5,
     timestampLabel: "Today 13:41",
     status: "Partial",
+    explainabilityStatus: "Partially sourced",
   },
 ];
 
-const recentActivity: DashboardDto["recentActivity"] = [
+const attentionAlerts: DashboardDto["attentionAlerts"] = [
   {
-    id: "activity-1",
-    title: "Outlook incremental sync started",
-    detail: "Nova Financial email connector entered processing",
-    timeLabel: "2 min ago",
+    id: "attention-sharepoint",
+    severity: "critical",
+    title: "SharePoint connector degraded",
+    tenantName: "Luma Health",
+    description: "Rate-limit backoff has left the care ops library outside freshness target.",
+    timestampLabel: "21 min ago",
+    suggestedAction: "Review connector quota and resume sync window",
+  },
+  {
+    id: "attention-outlook",
+    severity: "warning",
+    title: "Outlook Mail sync running behind",
+    tenantName: "Nova Financial",
+    description: "Mailbox delta is active but currently 24 minutes behind the live queue.",
+    timestampLabel: "8 min ago",
+    suggestedAction: "Watch ingestion throughput for the next cycle",
+  },
+  {
+    id: "attention-embedding",
+    severity: "critical",
+    title: "3 failed embedding jobs need retry",
+    tenantName: "Luma Health",
+    description: "Embedding generation failed after repeated token refresh errors.",
+    timestampLabel: "12 min ago",
+    suggestedAction: "Retry after Notion auth is refreshed",
+  },
+  {
+    id: "attention-stale-index",
+    severity: "warning",
+    title: "Tenant has stale index data",
+    tenantName: "Harbour Legal",
+    description: "Matter archive has not completed a freshness sweep today.",
+    timestampLabel: "44 min ago",
+    suggestedAction: "Queue a targeted knowledge freshness rebuild",
+  },
+  {
+    id: "attention-token",
+    severity: "info",
+    title: "Connector auth token expires soon",
+    tenantName: "Nova Financial",
+    description: "Google Drive token expires within the next 48 hours.",
+    timestampLabel: "1 hr ago",
+    suggestedAction: "Schedule credential rotation before expiry",
+  },
+];
+
+const timelineEvents: DashboardDto["timelineEvents"] = [
+  {
+    id: "timeline-sharepoint-complete",
+    timeLabel: "14:52",
+    eventType: "Sync completed",
+    tenantName: "Luma Health",
+    description: "SharePoint sync completed for priority care ops folders.",
+    status: "Completed",
+  },
+  {
+    id: "timeline-outlook-started",
+    timeLabel: "14:47",
+    eventType: "Ingestion started",
+    tenantName: "Nova Financial",
+    description: "Outlook incremental ingestion entered the processing lane.",
     status: "Running",
   },
   {
-    id: "activity-2",
-    title: "Source freshness below target",
-    detail: "SharePoint sync for Luma Health is 16 hours behind",
-    timeLabel: "21 min ago",
-    status: "Warning",
-  },
-  {
-    id: "activity-3",
-    title: "Knowledge rebuild completed",
-    detail: "Harbour Legal policy library rebuilt successfully",
-    timeLabel: "1 hr ago",
+    id: "timeline-embeddings",
+    timeLabel: "14:31",
+    eventType: "Embeddings generated",
+    tenantName: "Harbour Legal",
+    description: "Generated embeddings for 2,140 updated document chunks.",
     status: "Healthy",
   },
   {
-    id: "activity-4",
-    title: "Connector auth failure",
-    detail: "Notion token expired for Luma Health",
-    timeLabel: "2 hrs ago",
-    status: "Failed",
+    id: "timeline-question",
+    timeLabel: "14:18",
+    eventType: "Question asked",
+    tenantName: "Nova Financial",
+    description: "User asked for Q2 onboarding blockers with traceable sources.",
+    status: "Completed",
+  },
+  {
+    id: "timeline-auth",
+    timeLabel: "13:55",
+    eventType: "Auth refreshed",
+    tenantName: "Harbour Legal",
+    description: "Connector credentials refreshed for Drive corpus.",
+    status: "Healthy",
+  },
+  {
+    id: "timeline-ocr",
+    timeLabel: "13:39",
+    eventType: "OCR retry",
+    tenantName: "Luma Health",
+    description: "Failed OCR job retried after worker handoff.",
+    status: "Warning",
   },
 ];
 
@@ -253,6 +339,57 @@ const users: DashboardDto["users"] = [
   },
 ];
 
+const discoveryFindings: DashboardDto["discoveryFindings"] = [
+  {
+    id: "discovery-systems",
+    finding: "Newly discovered systems",
+    tenantName: "Nova Financial",
+    severity: "info",
+    confidence: 0.86,
+    recommendedAction: "Review candidate systems for connector onboarding",
+  },
+  {
+    id: "discovery-mailboxes",
+    finding: "Orphaned mailboxes",
+    tenantName: "Luma Health",
+    severity: "warning",
+    confidence: 0.79,
+    recommendedAction: "Confirm ownership before including in ingestion policy",
+  },
+  {
+    id: "discovery-licenses",
+    finding: "Inactive licenses",
+    tenantName: "Harbour Legal",
+    severity: "info",
+    confidence: 0.74,
+    recommendedAction: "Send candidate list to tenant operations owner",
+  },
+  {
+    id: "discovery-sharepoint",
+    finding: "Unknown SharePoint libraries",
+    tenantName: "Luma Health",
+    severity: "critical",
+    confidence: 0.91,
+    recommendedAction: "Map libraries to knowledge domains before indexing",
+  },
+  {
+    id: "discovery-duplicates",
+    finding: "Duplicate documents",
+    tenantName: "Nova Financial",
+    severity: "warning",
+    confidence: 0.83,
+    recommendedAction: "Run duplicate clustering before next rebuild",
+  },
+  {
+    id: "discovery-shadow-it",
+    finding: "Shadow IT indicators",
+    tenantName: "Harbour Legal",
+    severity: "critical",
+    confidence: 0.68,
+    recommendedAction: "Escalate systems list to BobHQ operator review",
+  },
+];
+
 export const mockDashboardDto: DashboardDto = {
   summary: {
     activeTenantDeltaLabel: "+1 this week",
@@ -267,7 +404,9 @@ export const mockDashboardDto: DashboardDto = {
   connectors,
   jobs,
   auditEntries,
-  recentActivity,
+  attentionAlerts,
+  timelineEvents,
   knowledgeItems,
   users,
+  discoveryFindings,
 };
