@@ -29,3 +29,11 @@ dotnet run
 ```
 
 The API is a .NET 8 Minimal API with mock operational data only. It exposes `/health` plus initial `/api/*` dashboard endpoints and allows local Vite dev requests from `http://localhost:5173`.
+
+## Bob API Persistence
+
+The SQL Server schema foundation lives at `services/Bob.Api/Database/001_initial_bobhq_schema.sql`.
+
+The backend also includes domain records and repository interfaces under `services/Bob.Api/Domain` and `services/Bob.Api/Repositories`. These are design contracts only for now. Runtime behavior still uses `MockDashboardDataService`; no EF Core, Dapper, database connection, auth, or real connector integration has been added yet.
+
+`ConnectionStrings:BobDb` is present as an empty placeholder in `services/Bob.Api/appsettings.json` for a future SQL Server-backed implementation.
