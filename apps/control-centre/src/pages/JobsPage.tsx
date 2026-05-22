@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import MetricCard from "../components/ui/MetricCard";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { getJobs } from "../services/dashboardService";
 import type { Job } from "../types/dashboard";
 
@@ -18,11 +20,15 @@ const columns: Column<Job>[] = [
 ];
 
 export default function JobsPage() {
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const { data: jobs, error, isLoading } = useServiceData(getJobs);
 
-  useEffect(() => {
-    void getJobs().then(setJobs);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading processing queue" />;
+  }
+
+  if (error || !jobs) {
+    return <ErrorPanel message={error?.message ?? "Job data is unavailable."} />;
+  }
 
   return (
     <div className="page-stack">

@@ -661,6 +661,41 @@ tbody tr:last-child td {
   border-bottom: 0;
 }
 
+.state-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 5rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: rgba(13, 25, 21, 0.84);
+  color: #d8eee5;
+}
+
+.state-panel--loading {
+  border-color: rgba(54, 242, 154, 0.24);
+}
+
+.state-panel--error {
+  display: grid;
+  border-color: rgba(255, 107, 114, 0.32);
+  background: rgba(255, 107, 114, 0.08);
+}
+
+.state-panel--error p {
+  margin: 0;
+  color: #ffc1c5;
+}
+
+.state-panel__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2.1s ease-out infinite;
+}
+
 .discovery-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.6fr);

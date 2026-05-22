@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { formatNumber } from "../lib/status";
 import { getTenants } from "../services/dashboardService";
 import type { Tenant } from "../types/dashboard";
@@ -17,11 +19,15 @@ const columns: Column<Tenant>[] = [
 ];
 
 export default function TenantsPage() {
-  const [tenants, setTenants] = useState<Tenant[]>([]);
+  const { data: tenants, error, isLoading } = useServiceData(getTenants);
 
-  useEffect(() => {
-    void getTenants().then(setTenants);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading tenants" />;
+  }
+
+  if (error || !tenants) {
+    return <ErrorPanel message={error?.message ?? "Tenant data is unavailable."} />;
+  }
 
   return (
     <div className="page-stack">

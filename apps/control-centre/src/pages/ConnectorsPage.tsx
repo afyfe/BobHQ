@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { formatNumber } from "../lib/status";
 import { getConnectors } from "../services/dashboardService";
 import type { Connector } from "../types/dashboard";
@@ -20,11 +22,15 @@ const columns: Column<Connector>[] = [
 ];
 
 export default function ConnectorsPage() {
-  const [connectors, setConnectors] = useState<Connector[]>([]);
+  const { data: connectors, error, isLoading } = useServiceData(getConnectors);
 
-  useEffect(() => {
-    void getConnectors().then(setConnectors);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading connector health" />;
+  }
+
+  if (error || !connectors) {
+    return <ErrorPanel message={error?.message ?? "Connector data is unavailable."} />;
+  }
 
   return (
     <div className="page-stack">

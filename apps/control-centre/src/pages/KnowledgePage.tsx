@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { formatNumber } from "../lib/status";
 import { getKnowledgeItems } from "../services/dashboardService";
 import type { KnowledgeItem } from "../types/dashboard";
@@ -16,11 +18,15 @@ const columns: Column<KnowledgeItem>[] = [
 ];
 
 export default function KnowledgePage() {
-  const [knowledgeItems, setKnowledgeItems] = useState<KnowledgeItem[]>([]);
+  const { data: knowledgeItems, error, isLoading } = useServiceData(getKnowledgeItems);
 
-  useEffect(() => {
-    void getKnowledgeItems().then(setKnowledgeItems);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading knowledge index" />;
+  }
+
+  if (error || !knowledgeItems) {
+    return <ErrorPanel message={error?.message ?? "Knowledge data is unavailable."} />;
+  }
 
   return (
     <div className="page-stack">

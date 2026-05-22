@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { getAuditEntries } from "../services/dashboardService";
 import type { AuditEntry } from "../types/dashboard";
 
@@ -17,11 +19,15 @@ const columns: Column<AuditEntry>[] = [
 ];
 
 export default function AuditPage() {
-  const [auditEntries, setAuditEntries] = useState<AuditEntry[]>([]);
+  const { data: auditEntries, error, isLoading } = useServiceData(getAuditEntries);
 
-  useEffect(() => {
-    void getAuditEntries().then(setAuditEntries);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading explainability trail" />;
+  }
+
+  if (error || !auditEntries) {
+    return <ErrorPanel message={error?.message ?? "Audit data is unavailable."} />;
+  }
 
   return (
     <div className="page-stack">

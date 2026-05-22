@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { getDiscoveryFindings } from "../services/dashboardService";
 import type { DiscoveryFinding } from "../types/dashboard";
 
@@ -14,11 +16,15 @@ const columns: Column<DiscoveryFinding>[] = [
 ];
 
 export default function DiscoveryPage() {
-  const [findings, setFindings] = useState<DiscoveryFinding[]>([]);
+  const { data: findings, error, isLoading } = useServiceData(getDiscoveryFindings);
 
-  useEffect(() => {
-    void getDiscoveryFindings().then(setFindings);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading discovery intelligence" />;
+  }
+
+  if (error || !findings) {
+    return <ErrorPanel message={error?.message ?? "Discovery data is unavailable."} />;
+  }
 
   return (
     <div className="page-stack">

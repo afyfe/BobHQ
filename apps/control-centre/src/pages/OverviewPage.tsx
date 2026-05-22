@@ -1,22 +1,55 @@
-import { useEffect, useState } from "react";
 import ActivityTimeline from "../components/dashboard/ActivityTimeline";
 import AttentionRequired from "../components/dashboard/AttentionRequired";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import MetricCard from "../components/ui/MetricCard";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { formatNumber } from "../lib/status";
-import { getDashboardOverview } from "../services/dashboardService";
-import type { DashboardOverview } from "../types/dashboard";
+import {
+  getActivityEvents,
+  getAttentionAlerts,
+  getConnectors,
+  getDashboardSummary,
+  getTenants,
+} from "../services/dashboardService";
+import type { ActivityEvent, AttentionAlert, Connector, DashboardSummary, Tenant } from "../types/dashboard";
+
+type OverviewData = DashboardSummary & {
+  tenants: Tenant[];
+  connectors: Connector[];
+  attentionAlerts: AttentionAlert[];
+  activityEvents: ActivityEvent[];
+};
+
+async function getOverviewData(): Promise<OverviewData> {
+  const [summary, tenants, connectors, attentionAlerts, activityEvents] = await Promise.all([
+    getDashboardSummary(),
+    getTenants(),
+    getConnectors(),
+    getAttentionAlerts(),
+    getActivityEvents(),
+  ]);
+
+  return {
+    ...summary,
+    tenants,
+    connectors,
+    attentionAlerts,
+    activityEvents,
+  };
+}
 
 export default function OverviewPage() {
-  const [overview, setOverview] = useState<DashboardOverview | null>(null);
+  const { data: overview, error, isLoading } = useServiceData(getOverviewData);
 
-  useEffect(() => {
-    void getDashboardOverview().then(setOverview);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading operational overview" />;
+  }
 
-  if (!overview) {
-    return null;
+  if (error || !overview) {
+    return <ErrorPanel message={error?.message ?? "Overview data is unavailable."} />;
   }
 
   return (
@@ -90,7 +123,7 @@ export default function OverviewPage() {
         </section>
       </div>
 
-      <ActivityTimeline events={overview.timelineEvents} />
+      <ActivityTimeline events={overview.activityEvents} />
     </div>
   );
 }

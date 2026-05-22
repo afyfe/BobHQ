@@ -5,10 +5,13 @@ import type {
   AttentionAlertDto,
   AuditEntry,
   AuditEntryDto,
+  ActivityEvent,
   Connector,
   ConnectorDto,
+  ConnectorRun,
   DashboardDto,
   DashboardOverview,
+  DashboardSummary,
   DiscoveryFinding,
   DiscoveryFindingDto,
   Job,
@@ -18,15 +21,21 @@ import type {
   Metric,
   Tenant,
   TenantDto,
-  TimelineEvent,
   TimelineEventDto,
   User,
   UserDto,
 } from "../types/dashboard";
 
+const mockDelayMs = 180;
+
 const dashboardClient = createMockApiClient({
   "/dashboard": mockDashboardDto,
 });
+
+async function withMockDelay<TData>(data: TData): Promise<TData> {
+  await new Promise((resolve) => window.setTimeout(resolve, mockDelayMs));
+  return data;
+}
 
 function mapTenant(dto: TenantDto): Tenant {
   return {
@@ -42,6 +51,18 @@ function mapTenant(dto: TenantDto): Tenant {
 }
 
 function mapConnector(dto: ConnectorDto): Connector {
+  const latestRun: ConnectorRun | undefined =
+    dto.status === "Syncing" || dto.failureCount > 0
+      ? {
+          id: `${dto.id}-latest-run`,
+          connectorId: dto.id,
+          status: dto.status,
+          progressText: dto.syncProgressLabel ?? undefined,
+          startedAt: dto.lastSuccessfulSyncLabel,
+          failureCount: dto.failureCount,
+        }
+      : undefined;
+
   return {
     id: dto.id,
     name: dto.name,
@@ -54,6 +75,7 @@ function mapConnector(dto: ConnectorDto): Connector {
     syncProgress: dto.syncProgressLabel ?? undefined,
     lastSyncAge: dto.lastSyncAgeLabel,
     failureCount: dto.failureCount,
+    latestRun,
   };
 }
 
@@ -96,7 +118,7 @@ function mapAttentionAlert(dto: AttentionAlertDto): AttentionAlert {
   };
 }
 
-function mapTimelineEvent(dto: TimelineEventDto): TimelineEvent {
+function mapActivityEvent(dto: TimelineEventDto): ActivityEvent {
   return {
     id: dto.id,
     time: dto.timeLabel,
@@ -165,49 +187,64 @@ async function getDashboardDto(): Promise<DashboardDto> {
   return dashboardClient.get<DashboardDto>("/dashboard");
 }
 
+export async function getDashboardSummary(): Promise<DashboardSummary> {
+  const dashboard = await getDashboardDto();
+  return withMockDelay({ metrics: buildOverviewMetrics(dashboard) });
+}
+
 export async function getDashboardOverview(): Promise<DashboardOverview> {
   const dashboard = await getDashboardDto();
 
-  return {
+  return withMockDelay({
     metrics: buildOverviewMetrics(dashboard),
     tenants: dashboard.tenants.map(mapTenant),
     connectors: dashboard.connectors.map(mapConnector),
     attentionAlerts: dashboard.attentionAlerts.map(mapAttentionAlert),
-    timelineEvents: dashboard.timelineEvents.map(mapTimelineEvent),
-  };
+    activityEvents: dashboard.timelineEvents.map(mapActivityEvent),
+  });
 }
 
 export async function getTenants(): Promise<Tenant[]> {
   const dashboard = await getDashboardDto();
-  return dashboard.tenants.map(mapTenant);
+  return withMockDelay(dashboard.tenants.map(mapTenant));
 }
 
 export async function getConnectors(): Promise<Connector[]> {
   const dashboard = await getDashboardDto();
-  return dashboard.connectors.map(mapConnector);
+  return withMockDelay(dashboard.connectors.map(mapConnector));
 }
 
 export async function getJobs(): Promise<Job[]> {
   const dashboard = await getDashboardDto();
-  return dashboard.jobs.map(mapJob);
+  return withMockDelay(dashboard.jobs.map(mapJob));
 }
 
 export async function getAuditEntries(): Promise<AuditEntry[]> {
   const dashboard = await getDashboardDto();
-  return dashboard.auditEntries.map(mapAuditEntry);
+  return withMockDelay(dashboard.auditEntries.map(mapAuditEntry));
 }
 
 export async function getKnowledgeItems(): Promise<KnowledgeItem[]> {
   const dashboard = await getDashboardDto();
-  return dashboard.knowledgeItems.map(mapKnowledgeItem);
+  return withMockDelay(dashboard.knowledgeItems.map(mapKnowledgeItem));
 }
 
 export async function getUsers(): Promise<User[]> {
   const dashboard = await getDashboardDto();
-  return dashboard.users.map(mapUser);
+  return withMockDelay(dashboard.users.map(mapUser));
 }
 
 export async function getDiscoveryFindings(): Promise<DiscoveryFinding[]> {
   const dashboard = await getDashboardDto();
-  return dashboard.discoveryFindings.map(mapDiscoveryFinding);
+  return withMockDelay(dashboard.discoveryFindings.map(mapDiscoveryFinding));
+}
+
+export async function getAttentionAlerts(): Promise<AttentionAlert[]> {
+  const dashboard = await getDashboardDto();
+  return withMockDelay(dashboard.attentionAlerts.map(mapAttentionAlert));
+}
+
+export async function getActivityEvents(): Promise<ActivityEvent[]> {
+  const dashboard = await getDashboardDto();
+  return withMockDelay(dashboard.timelineEvents.map(mapActivityEvent));
 }

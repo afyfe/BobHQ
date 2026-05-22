@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
 import DataTable, { type Column } from "../components/ui/DataTable";
+import ErrorPanel from "../components/ui/ErrorPanel";
+import LoadingState from "../components/ui/LoadingState";
 import PageHeader from "../components/ui/PageHeader";
 import StatusPill from "../components/ui/StatusPill";
+import { useServiceData } from "../hooks/useServiceData";
 import { getUsers } from "../services/dashboardService";
 import type { User } from "../types/dashboard";
 
@@ -15,11 +17,15 @@ const columns: Column<User>[] = [
 ];
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
+  const { data: users, error, isLoading } = useServiceData(getUsers);
 
-  useEffect(() => {
-    void getUsers().then(setUsers);
-  }, []);
+  if (isLoading) {
+    return <LoadingState label="Loading users" />;
+  }
+
+  if (error || !users) {
+    return <ErrorPanel message={error?.message ?? "User data is unavailable."} />;
+  }
 
   return (
     <div className="page-stack">

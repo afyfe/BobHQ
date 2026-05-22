@@ -67,6 +67,17 @@ export type Connector = {
   syncProgress?: string;
   lastSyncAge: string;
   failureCount: number;
+  latestRun?: ConnectorRun;
+};
+
+export type ConnectorRun = {
+  id: string;
+  connectorId: string;
+  status: ConnectorStatus;
+  progressText?: string;
+  startedAt: string;
+  completedAt?: string;
+  failureCount: number;
 };
 
 export type JobDto = {
@@ -144,7 +155,7 @@ export type TimelineEventDto = {
   status: TimelineEventStatus;
 };
 
-export type TimelineEvent = {
+export type ActivityEvent = {
   id: string;
   time: string;
   eventType: string;
@@ -152,6 +163,8 @@ export type TimelineEvent = {
   description: string;
   status: TimelineEventStatus;
 };
+
+export type TimelineEvent = ActivityEvent;
 
 export type KnowledgeItemDto = {
   id: string;
@@ -211,12 +224,15 @@ export type DiscoveryFinding = {
   recommendedAction: string;
 };
 
-export type DashboardOverview = {
+export type DashboardSummary = {
   metrics: Metric[];
+};
+
+export type DashboardOverview = DashboardSummary & {
   tenants: Tenant[];
   connectors: Connector[];
   attentionAlerts: AttentionAlert[];
-  timelineEvents: TimelineEvent[];
+  activityEvents: ActivityEvent[];
 };
 
 export type DashboardSummaryDto = {
