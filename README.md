@@ -64,3 +64,32 @@ The SQL Server schema foundation lives at `services/Bob.Api/Database/001_initial
 The backend also includes domain records and repository interfaces under `services/Bob.Api/Domain` and `services/Bob.Api/Repositories`. These are design contracts only for now. Runtime behavior defaults to `MockDashboardDataService`, with an opt-in Dapper SQL read mode available through `BobApi:DataSource`. No EF Core, write repositories, auth, or real connector integration has been added yet.
 
 `ConnectionStrings:BobDb` is present as an empty placeholder in `services/Bob.Api/appsettings.json` for a future SQL Server-backed implementation.
+
+## Connector Runtime
+
+The connector runtime foundation lives in `services/Bob.Connectors`.
+
+It defines the operational contracts AskBob ingestion workers will use later:
+
+- `IConnector` for executable connector implementations.
+- `IConnectorRuntime` for orchestrating enabled connector runs.
+- `IConnectorHealthCheck` for lightweight connector readiness checks.
+- `ConnectorBase` for standard timing, status, result creation, and execution logging.
+- Runtime models for execution context, items, health results, sync modes, statuses, and operational logs.
+
+Current connector implementations are mock-only:
+
+- `MockSharePointConnector`
+- `MockOutlookConnector`
+- `MockGoogleDriveConnector`
+
+These simulate ingestion, produce fake connector items, support cancellation tokens, and emit operational logs. They do not call Microsoft Graph, Google APIs, queues, embeddings, or any external system.
+
+The future worker model should use `ConnectorRuntimeService` as the narrow orchestration point: load enabled connector definitions, build a tenant execution context, run a sync mode, capture logs/results, and persist outcomes. The runtime is intentionally focused on ingestion operations rather than generic admin CRUD.
+
+Run the manual sandbox:
+
+```bash
+cd tools/ConnectorSandbox
+dotnet run
+```
