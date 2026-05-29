@@ -93,3 +93,36 @@ Run the manual sandbox:
 cd tools/ConnectorSandbox
 dotnet run
 ```
+
+## Bob Worker
+
+`services/Bob.Worker` is the .NET 8 Worker Service host for connector ingestion runs.
+
+For now it is mock-only. It references `Bob.Connectors`, registers the mock SharePoint, Outlook, and Google Drive connectors, and runs `ConnectorRuntimeService` on startup and then on a configurable timer. Connector results, timings, warnings, errors, and per-connector operational messages are written through `ILogger`.
+
+Run locally:
+
+```bash
+cd services/Bob.Worker
+dotnet run
+```
+
+Worker settings live under `ConnectorWorker` in `appsettings.json`:
+
+- `TenantId`
+- `TenantName`
+- `SyncMode`
+- `RunOnStartup`
+- `IntervalSeconds`
+
+The worker is prepared for Linux service hosting with `services/Bob.Worker/deploy/bob-worker.service`. Publish and install manually when needed:
+
+```bash
+cd services/Bob.Worker
+dotnet publish -c Release -o /opt/bobhq/Bob.Worker
+sudo cp deploy/bob-worker.service /etc/systemd/system/bob-worker.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now bob-worker
+```
+
+Database persistence is intentionally left for the next step. The worker currently logs operational results only; it does not write connector runs, jobs, or indexed items to SQL.
