@@ -8,4 +8,7 @@
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bob.ConnectorPersistence\Bob.ConnectorPersistence.csproj" />
+  </ItemGroup>
 </Project>

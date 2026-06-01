@@ -1,5 +1,7 @@
 using Bob.Connectors.Abstractions;
 using Bob.Connectors.Models;
+using Bob.ConnectorPersistence.Abstractions;
+using Bob.ConnectorPersistence.Models;
 using Microsoft.Extensions.Options;
 
 namespace Bob.Worker;
@@ -8,15 +10,18 @@ public sealed class Worker : BackgroundService
 {
     private readonly ILogger<Worker> logger;
     private readonly IConnectorRuntime connectorRuntime;
+    private readonly IConnectorRunWriter connectorRunWriter;
     private readonly ConnectorWorkerOptions options;
 
     public Worker(
         ILogger<Worker> logger,
         IConnectorRuntime connectorRuntime,
+        IConnectorRunWriter connectorRunWriter,
         IOptions<ConnectorWorkerOptions> options)
     {
         this.logger = logger;
         this.connectorRuntime = connectorRuntime;
+        this.connectorRunWriter = connectorRunWriter;
         this.options = options.Value;
     }
 
@@ -44,7 +49,8 @@ public sealed class Worker : BackgroundService
 
     private async Task RunConnectorsAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Starting connector runtime cycle at {StartedUtc}", DateTimeOffset.UtcNow);
+        var startedUtc = DateTimeOffset.UtcNow;
+        logger.LogInformation("Starting connector runtime cycle at {StartedUtc}", startedUtc);
 
         IReadOnlyList<ConnectorExecutionResult> results;
 
@@ -65,14 +71,29 @@ public sealed class Worker : BackgroundService
         foreach (var result in results)
         {
             LogConnectorResult(result);
+            await connectorRunWriter.PersistExecutionAsync(result, stoppingToken);
         }
 
-        logger.LogInformation(
-            "Connector runtime cycle completed. Connectors={ConnectorCount}, ItemsProcessed={ItemsProcessed}, Failed={FailedCount}, Degraded={DegradedCount}",
+        var completedUtc = DateTimeOffset.UtcNow;
+        var summary = new ConnectorCycleSummary(
+            Guid.NewGuid(),
+            options.TenantId,
+            options.TenantName,
+            startedUtc,
+            completedUtc,
             results.Count,
             results.Sum(result => result.Items.Count),
             results.Count(result => result.Status == ConnectorStatus.Failed),
             results.Count(result => result.Status == ConnectorStatus.Degraded));
+
+        await connectorRunWriter.PersistCycleSummaryAsync(summary, stoppingToken);
+
+        logger.LogInformation(
+            "Connector runtime cycle completed. Connectors={ConnectorCount}, ItemsProcessed={ItemsProcessed}, Failed={FailedCount}, Degraded={DegradedCount}",
+            summary.ConnectorCount,
+            summary.ItemsProcessed,
+            summary.FailedCount,
+            summary.DegradedCount);
     }
 
     private void LogConnectorResult(ConnectorExecutionResult result)

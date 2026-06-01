@@ -13,5 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bob.Connectors\Bob.Connectors.csproj" />
+    <ProjectReference Include="..\Bob.ConnectorPersistence\Bob.ConnectorPersistence.csproj" />
   </ItemGroup>
 </Project>

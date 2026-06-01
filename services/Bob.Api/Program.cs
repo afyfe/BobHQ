@@ -1,6 +1,9 @@
 using Bob.Api.Endpoints;
 using Bob.Api.Data;
 using Bob.Api.Services;
+using Bob.ConnectorPersistence.Abstractions;
+using Bob.ConnectorPersistence.Data;
+using Bob.ConnectorPersistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,11 +41,33 @@ else
     throw new InvalidOperationException($"Unsupported BobApi:DataSource value '{dataSource}'. Valid values are 'Mock' and 'Sql'.");
 }
 
+var connectorPersistenceEnabled = builder.Configuration.GetValue("ConnectorPersistence:Enabled", false);
+
+if (connectorPersistenceEnabled)
+{
+    var connectionString = builder.Configuration.GetConnectionString("ConnectorDb");
+
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        throw new InvalidOperationException(
+            "ConnectorPersistence:Enabled is true, but ConnectionStrings:ConnectorDb is missing or empty.");
+    }
+
+    builder.Services.AddSingleton<IPostgresConnectionFactory>(
+        new PostgresConnectionFactory(connectionString));
+    builder.Services.AddSingleton<IConnectorRunReader, PostgresConnectorRunRepository>();
+}
+else
+{
+    builder.Services.AddSingleton<IConnectorRunReader, NullConnectorRunRepository>();
+}
+
 var app = builder.Build();
 
 app.UseCors("ViteDev");
 
 app.MapGet("/health", () => Results.Ok("OK"));
 app.MapDashboardEndpoints();
+app.MapConnectorRunEndpoints();
 
 app.Run();

@@ -125,4 +125,38 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now bob-worker
 ```
 
-Database persistence is intentionally left for the next step. The worker currently logs operational results only; it does not write connector runs, jobs, or indexed items to SQL.
+Indexed-item and job persistence remain future work. The worker keeps operational `ILogger` output whether connector-run persistence is enabled or not.
+
+## Connector Run Persistence
+
+Connector execution telemetry can be stored in PostgreSQL through `services/Bob.ConnectorPersistence`.
+
+The operational store contains:
+
+- `ConnectorRuns`
+- `ConnectorRunLogs`
+- `ConnectorWarnings`
+- `ConnectorCycleSummaries`
+
+Persistence is disabled by default so mock connector runs still work without a database. To enable it, apply `services/Bob.ConnectorPersistence/Database/001_connector_runtime_schema.sql` and configure both `Bob.Worker` and `Bob.Api`:
+
+```json
+{
+  "ConnectorPersistence": {
+    "Enabled": true
+  },
+  "ConnectionStrings": {
+    "ConnectorDb": "Host=localhost;Port=5432;Database=bobhq_connectors;Username=postgres;Password=postgres"
+  }
+}
+```
+
+The worker continues to emit `ILogger` output and additionally persists each connector result, per-run log messages, warnings, errors, and cycle summaries.
+
+Bob.Api exposes connector telemetry read endpoints:
+
+- `GET /api/connectors/runs`
+- `GET /api/connectors/health`
+- `GET /api/connectors/latest`
+
+See `services/Bob.ConnectorPersistence/Database/README.md` for local PostgreSQL bootstrap steps.
