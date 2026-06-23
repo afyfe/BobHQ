@@ -45,17 +45,17 @@ var connectorPersistenceEnabled = builder.Configuration.GetValue("ConnectorPersi
 
 if (connectorPersistenceEnabled)
 {
-    var connectionString = builder.Configuration.GetConnectionString("ConnectorDb");
+    var connectionString = builder.Configuration.GetConnectionString("AskBobSql");
 
     if (string.IsNullOrWhiteSpace(connectionString))
     {
         throw new InvalidOperationException(
-            "ConnectorPersistence:Enabled is true, but ConnectionStrings:ConnectorDb is missing or empty.");
+            "ConnectorPersistence:Enabled is true, but ConnectionStrings:AskBobSql is missing or empty.");
     }
 
-    builder.Services.AddSingleton<IPostgresConnectionFactory>(
-        new PostgresConnectionFactory(connectionString));
-    builder.Services.AddSingleton<IConnectorRunReader, PostgresConnectorRunRepository>();
+    builder.Services.AddSingleton<ISqlServerConnectionFactory>(
+        new SqlServerConnectionFactory(connectionString));
+    builder.Services.AddSingleton<IConnectorRunReader, SqlServerConnectorRunRepository>();
 }
 else
 {

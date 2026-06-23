@@ -129,7 +129,7 @@ Indexed-item and job persistence remain future work. The worker keeps operationa
 
 ## Connector Run Persistence
 
-Connector execution telemetry can be stored in PostgreSQL through `services/Bob.ConnectorPersistence`.
+Connector execution telemetry can be stored in SQL Server through `services/Bob.ConnectorPersistence`.
 
 The operational store contains:
 
@@ -138,7 +138,7 @@ The operational store contains:
 - `ConnectorWarnings`
 - `ConnectorCycleSummaries`
 
-Persistence is disabled by default so mock connector runs still work without a database. To enable it, apply `services/Bob.ConnectorPersistence/Database/001_connector_runtime_schema.sql` and configure both `Bob.Worker` and `Bob.Api`:
+Persistence is disabled by default so mock connector runs still work without a database. To enable it, apply `services/Bob.ConnectorPersistence/Database/sqlserver/001_connector_runtime_schema.sql` and configure both `Bob.Worker` and `Bob.Api`:
 
 ```json
 {
@@ -146,7 +146,7 @@ Persistence is disabled by default so mock connector runs still work without a d
     "Enabled": true
   },
   "ConnectionStrings": {
-    "ConnectorDb": "Host=localhost;Port=5432;Database=bobhq_connectors;Username=postgres;Password=postgres"
+    "AskBobSql": "Server=localhost;Database=AskBobLocal;Trusted_Connection=True;TrustServerCertificate=True"
   }
 }
 ```
@@ -159,4 +159,4 @@ Bob.Api exposes connector telemetry read endpoints:
 - `GET /api/connectors/health`
 - `GET /api/connectors/latest`
 
-See `services/Bob.ConnectorPersistence/Database/README.md` for local PostgreSQL bootstrap steps.
+See `services/Bob.ConnectorPersistence/Database/README.md` for local SQL Server bootstrap steps.

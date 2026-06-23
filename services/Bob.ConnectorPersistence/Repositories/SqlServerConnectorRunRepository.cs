@@ -3,14 +3,16 @@ using Bob.ConnectorPersistence.Data;
 using Bob.ConnectorPersistence.Models;
 using Bob.Connectors.Models;
 using Dapper;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Bob.ConnectorPersistence.Repositories;
 
-public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConnectorRunReader
+public sealed class SqlServerConnectorRunRepository : IConnectorRunWriter, IConnectorRunReader
 {
-    private readonly IPostgresConnectionFactory connectionFactory;
+    private readonly ISqlServerConnectionFactory connectionFactory;
 
-    public PostgresConnectorRunRepository(IPostgresConnectionFactory connectionFactory)
+    public SqlServerConnectorRunRepository(ISqlServerConnectionFactory connectionFactory)
     {
         this.connectionFactory = connectionFactory;
     }
@@ -20,10 +22,10 @@ public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConne
         CancellationToken cancellationToken = default)
     {
         const string insertRunSql = """
-            insert into "ConnectorRuns" (
-                "ConnectorRunId", "ConnectorId", "TenantId", "TenantName", "ConnectorName",
-                "ConnectorType", "Status", "StartedUtc", "CompletedUtc", "DurationMilliseconds",
-                "ItemsProcessed", "WarningCount", "ErrorCount", "CreatedUtc")
+            insert into dbo.ConnectorRuns (
+                ConnectorRunId, ConnectorId, TenantId, TenantName, ConnectorName,
+                ConnectorType, Status, StartedUtc, CompletedUtc, DurationMilliseconds,
+                ItemsProcessed, WarningCount, ErrorCount, CreatedUtc)
             values (
                 @ConnectorRunId, @ConnectorId, @TenantId, @TenantName, @ConnectorName,
                 @ConnectorType, @Status, @StartedUtc, @CompletedUtc, @DurationMilliseconds,
@@ -31,8 +33,8 @@ public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConne
             """;
 
         const string insertLogSql = """
-            insert into "ConnectorRunLogs" (
-                "ConnectorRunLogId", "ConnectorRunId", "Level", "Message", "CreatedUtc")
+            insert into dbo.ConnectorRunLogs (
+                ConnectorRunLogId, ConnectorRunId, Level, Message, CreatedUtc)
             values (@ConnectorRunLogId, @ConnectorRunId, @Level, @Message, @CreatedUtc);
             """;
 
@@ -98,9 +100,9 @@ public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConne
         CancellationToken cancellationToken = default)
     {
         const string sql = """
-            insert into "ConnectorCycleSummaries" (
-                "ConnectorCycleSummaryId", "TenantId", "TenantName", "StartedUtc", "CompletedUtc",
-                "ConnectorCount", "ItemsProcessed", "FailedCount", "DegradedCount", "CreatedUtc")
+            insert into dbo.ConnectorCycleSummaries (
+                ConnectorCycleSummaryId, TenantId, TenantName, StartedUtc, CompletedUtc,
+                ConnectorCount, ItemsProcessed, FailedCount, DegradedCount, CreatedUtc)
             values (
                 @ConnectorCycleSummaryId, @TenantId, @TenantName, @StartedUtc, @CompletedUtc,
                 @ConnectorCount, @ItemsProcessed, @FailedCount, @DegradedCount, @CreatedUtc);
@@ -131,13 +133,12 @@ public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConne
         CancellationToken cancellationToken = default)
     {
         const string sql = """
-            select
-                "ConnectorRunId", "ConnectorId", "TenantId", "TenantName", "ConnectorName",
-                "ConnectorType", "Status", "StartedUtc", "CompletedUtc", "DurationMilliseconds",
-                "ItemsProcessed", "WarningCount", "ErrorCount"
-            from "ConnectorRuns"
-            order by "StartedUtc" desc
-            limit @Limit;
+            select top (@Limit)
+                ConnectorRunId, ConnectorId, TenantId, TenantName, ConnectorName,
+                ConnectorType, Status, StartedUtc, CompletedUtc, DurationMilliseconds,
+                ItemsProcessed, WarningCount, ErrorCount
+            from dbo.ConnectorRuns
+            order by StartedUtc desc;
             """;
 
         await using var connection = connectionFactory.CreateConnection();
@@ -154,12 +155,21 @@ public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConne
         CancellationToken cancellationToken = default)
     {
         const string sql = """
-            select distinct on ("ConnectorId")
-                "ConnectorId", "TenantId", "TenantName", "ConnectorName", "ConnectorType",
-                "Status", "CompletedUtc" as "LastRunCompletedUtc", "ItemsProcessed",
-                "WarningCount", "ErrorCount"
-            from "ConnectorRuns"
-            order by "ConnectorId", "StartedUtc" desc;
+            with LatestRuns as
+            (
+                select
+                    ConnectorId, TenantId, TenantName, ConnectorName, ConnectorType,
+                    Status, CompletedUtc, ItemsProcessed, WarningCount, ErrorCount,
+                    row_number() over (partition by ConnectorId order by StartedUtc desc) as RowNumber
+                from dbo.ConnectorRuns
+            )
+            select
+                ConnectorId, TenantId, TenantName, ConnectorName, ConnectorType,
+                Status, CompletedUtc as LastRunCompletedUtc, ItemsProcessed,
+                WarningCount, ErrorCount
+            from LatestRuns
+            where RowNumber = 1
+            order by ConnectorName;
             """;
 
         await using var connection = connectionFactory.CreateConnection();
@@ -174,12 +184,22 @@ public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConne
         CancellationToken cancellationToken = default)
     {
         const string sql = """
-            select distinct on ("ConnectorId")
-                "ConnectorRunId", "ConnectorId", "TenantId", "TenantName", "ConnectorName",
-                "ConnectorType", "Status", "StartedUtc", "CompletedUtc", "DurationMilliseconds",
-                "ItemsProcessed", "WarningCount", "ErrorCount"
-            from "ConnectorRuns"
-            order by "ConnectorId", "StartedUtc" desc;
+            with LatestRuns as
+            (
+                select
+                    ConnectorRunId, ConnectorId, TenantId, TenantName, ConnectorName,
+                    ConnectorType, Status, StartedUtc, CompletedUtc, DurationMilliseconds,
+                    ItemsProcessed, WarningCount, ErrorCount,
+                    row_number() over (partition by ConnectorId order by StartedUtc desc) as RowNumber
+                from dbo.ConnectorRuns
+            )
+            select
+                ConnectorRunId, ConnectorId, TenantId, TenantName, ConnectorName,
+                ConnectorType, Status, StartedUtc, CompletedUtc, DurationMilliseconds,
+                ItemsProcessed, WarningCount, ErrorCount
+            from LatestRuns
+            where RowNumber = 1
+            order by ConnectorName;
             """;
 
         await using var connection = connectionFactory.CreateConnection();
@@ -191,16 +211,16 @@ public sealed class PostgresConnectorRunRepository : IConnectorRunWriter, IConne
     }
 
     private static Task PersistWarningAsync(
-        Npgsql.NpgsqlConnection connection,
-        Npgsql.NpgsqlTransaction transaction,
+        SqlConnection connection,
+        IDbTransaction transaction,
         Guid connectorRunId,
         string severity,
         string message,
         CancellationToken cancellationToken)
     {
         const string sql = """
-            insert into "ConnectorWarnings" (
-                "ConnectorWarningId", "ConnectorRunId", "Severity", "Message", "CreatedUtc")
+            insert into dbo.ConnectorWarnings (
+                ConnectorWarningId, ConnectorRunId, Severity, Message, CreatedUtc)
             values (@ConnectorWarningId, @ConnectorRunId, @Severity, @Message, @CreatedUtc);
             """;
 

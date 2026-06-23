@@ -1,18 +1,17 @@
-# Connector Runtime PostgreSQL Store
+# Connector Runtime SQL Server Store
 
 This database stores operational connector telemetry only. It is separate from the existing Bob.Api dashboard schema.
 
-Create a local PostgreSQL database:
+Create a local SQL Server database:
 
 ```sql
-create database bobhq_connectors;
+create database AskBobLocal;
 ```
 
-Run the schema with `psql`:
+Run the schema:
 
-```bash
-psql "Host=localhost;Port=5432;Database=bobhq_connectors;Username=postgres;Password=postgres" \
-  -f services/Bob.ConnectorPersistence/Database/001_connector_runtime_schema.sql
+```powershell
+sqlcmd -S localhost -d AskBobLocal -E -i services/Bob.ConnectorPersistence/Database/sqlserver/001_connector_runtime_schema.sql
 ```
 
 Enable persistence in both `services/Bob.Worker/appsettings.Development.json` and `services/Bob.Api/appsettings.Development.json`:
@@ -23,7 +22,7 @@ Enable persistence in both `services/Bob.Worker/appsettings.Development.json` an
     "Enabled": true
   },
   "ConnectionStrings": {
-    "ConnectorDb": "Host=localhost;Port=5432;Database=bobhq_connectors;Username=postgres;Password=postgres"
+    "AskBobSql": "Server=localhost;Database=AskBobLocal;Trusted_Connection=True;TrustServerCertificate=True"
   }
 }
 ```
