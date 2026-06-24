@@ -101,6 +101,7 @@ export type ConnectorHealthTelemetryDto = {
 
 export type Connector = {
   id: string;
+  tenantId: string;
   name: string;
   type: string;
   tenant: string;

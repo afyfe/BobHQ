@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import DataTable, { type Column } from "../components/ui/DataTable";
 import ErrorPanel from "../components/ui/ErrorPanel";
 import LoadingState from "../components/ui/LoadingState";
@@ -7,6 +8,7 @@ import StatusPill from "../components/ui/StatusPill";
 import { useServiceData } from "../hooks/useServiceData";
 import { formatNumber } from "../lib/status";
 import { getTenants } from "../services/dashboardService";
+import { createTenant } from "../services/tenantService";
 import type { Tenant } from "../types/dashboard";
 
 const columns: Column<Tenant>[] = [
@@ -29,9 +31,10 @@ const columns: Column<Tenant>[] = [
 ];
 
 export default function AdminTenantsPage() {
+  const navigate = useNavigate();
   const { data: tenants, error, isLoading, isRefreshing, reload } = useServiceData(getTenants);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
-  const hasAuthContext = hasExternalAuthContext();
+  const canCreateTenants = isProtectedAdminHost();
 
   if (isLoading) {
     return <LoadingState label="Loading tenant management" />;
@@ -49,9 +52,9 @@ export default function AdminTenantsPage() {
         description="Tenant records for the AskBob control plane, prepared for Cloudflare Access protection."
       />
 
-      {!hasAuthContext ? (
+      {!canCreateTenants ? (
         <div className="state-panel state-panel--warning">
-          Cloudflare Access context not detected. Keep tenant creation disabled until hq.askbob.live is protected.
+          Tenant creation is enabled only on hq.askbob.live behind Cloudflare Access.
         </div>
       ) : null}
 
@@ -67,17 +70,65 @@ export default function AdminTenantsPage() {
         </div>
       </div>
 
-      <DataTable columns={columns} rows={tenants} getRowKey={(tenant) => tenant.id} />
+      <DataTable
+        columns={columns}
+        rows={tenants}
+        getRowKey={(tenant) => tenant.id}
+        onRowClick={(tenant) => navigate(`/admin/tenants/${tenant.id}`)}
+      />
 
-      {isCreateModalOpen ? <CreateTenantPlaceholderModal onClose={() => setCreateModalOpen(false)} /> : null}
+      {isCreateModalOpen ? (
+        <CreateTenantModal
+          canCreateTenants={canCreateTenants}
+          onClose={() => setCreateModalOpen(false)}
+          onCreated={() => {
+            setCreateModalOpen(false);
+            reload();
+          }}
+        />
+      ) : null}
     </div>
   );
 }
 
-function CreateTenantPlaceholderModal({ onClose }: { onClose: () => void }) {
+type CreateTenantModalProps = {
+  canCreateTenants: boolean;
+  onClose: () => void;
+  onCreated: () => void;
+};
+
+function CreateTenantModal({ canCreateTenants, onClose, onCreated }: CreateTenantModalProps) {
+  const [name, setName] = useState("");
+  const [planName, setPlanName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!canCreateTenants || isSubmitting) {
+      return;
+    }
+
+    setSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      await createTenant({
+        name: name.trim(),
+        planName: planName.trim() || undefined,
+      });
+      onCreated();
+    } catch (error) {
+      setErrorMessage(getTenantErrorMessage(error));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div className="modal-backdrop" role="presentation">
-      <section className="modal" role="dialog" aria-modal="true" aria-labelledby="create-tenant-title">
+      <form className="modal" role="dialog" aria-modal="true" aria-labelledby="create-tenant-title" onSubmit={handleSubmit}>
         <div className="modal__header">
           <div>
             <p className="page-header__eyebrow">Admin</p>
@@ -91,31 +142,65 @@ function CreateTenantPlaceholderModal({ onClose }: { onClose: () => void }) {
         <div className="form-grid">
           <label className="field">
             <span>Tenant name</span>
-            <input type="text" placeholder="Northwind Legal" disabled />
+            <input
+              type="text"
+              placeholder="Northwind Legal"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              disabled={!canCreateTenants || isSubmitting}
+              required
+            />
           </label>
           <label className="field">
             <span>Plan name</span>
-            <input type="text" placeholder="Internal Preview" disabled />
+            <input
+              type="text"
+              placeholder="Internal Preview"
+              value={planName}
+              onChange={(event) => setPlanName(event.target.value)}
+              disabled={!canCreateTenants || isSubmitting}
+            />
           </label>
         </div>
 
-        <div className="state-panel state-panel--warning">
-          Creation stays paused in the shell until Cloudflare Access is confirmed for hq.askbob.live.
-        </div>
+        {!canCreateTenants ? (
+          <div className="state-panel state-panel--warning">
+            Tenant creation is available on hq.askbob.live after Cloudflare Access.
+          </div>
+        ) : null}
+
+        {errorMessage ? (
+          <div className="state-panel state-panel--error">
+            <p>{errorMessage}</p>
+          </div>
+        ) : null}
 
         <div className="modal__actions">
           <button className="button button--quiet" type="button" onClick={onClose}>
             Cancel
           </button>
-          <button className="button" type="button" disabled>
-            Creation disabled
+          <button className="button" type="submit" disabled={!canCreateTenants || isSubmitting}>
+            {isSubmitting ? "Creating" : "Create tenant"}
           </button>
         </div>
-      </section>
+      </form>
     </div>
   );
 }
 
-function hasExternalAuthContext(): boolean {
-  return window.location.hostname === "hq.askbob.live" || import.meta.env.VITE_ASKBOB_AUTH_CONTEXT === "cloudflare-access";
+function isProtectedAdminHost(): boolean {
+  return window.location.hostname === "hq.askbob.live";
+}
+
+function getTenantErrorMessage(error: unknown): string {
+  if (!(error instanceof Error)) {
+    return "Tenant could not be created.";
+  }
+
+  try {
+    const payload = JSON.parse(error.message) as { message?: string };
+    return payload.message ?? error.message;
+  } catch {
+    return error.message;
+  }
 }

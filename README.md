@@ -21,9 +21,9 @@ The service currently returns typed mock data from `src/data/mockDashboardData.t
 
 ## Admin Shell
 
-The control centre includes an `/admin` route with a Tenant Management page and a disabled Create Tenant modal placeholder. Authentication is intentionally external for now.
+The control centre includes an `/admin` route with a Tenant Management page and Create Tenant modal. Authentication is intentionally external for now.
 
-Before tenant creation is enabled in the UI or exposed publicly, `hq.askbob.live` must be protected by Cloudflare Access. Bob.Api tenant-management endpoints are temporarily unauthenticated so Cloudflare Access can be the enforcement boundary; do not expose them on an unprotected public origin.
+Tenant creation is enabled in the UI only when the shell is running on `hq.askbob.live`, which must be protected by Cloudflare Access. Bob.Api tenant-management endpoints are temporarily unauthenticated so Cloudflare Access can be the enforcement boundary; do not expose them on an unprotected public origin.
 
 ## Overview Metrics
 

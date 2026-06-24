@@ -55,6 +55,11 @@ export async function getConnectorTelemetry(): Promise<Connector[]> {
     .sort((first, second) => first.name.localeCompare(second.name));
 }
 
+export async function getConnectorTelemetryForTenant(tenantId: string): Promise<Connector[]> {
+  const connectors = await getConnectorTelemetry();
+  return connectors.filter((connector) => connector.tenantId === tenantId);
+}
+
 function mapConnectorTelemetry(
   connectorId: string,
   health: ConnectorHealthTelemetryDto | undefined,
@@ -70,6 +75,7 @@ function mapConnectorTelemetry(
 
   return {
     id: connectorId,
+    tenantId: health?.tenantId ?? latestRun?.tenantId ?? "",
     name: health?.connectorName ?? latestRun?.connectorName ?? "Unknown connector",
     type: health?.connectorType ?? latestRun?.connectorType ?? "-",
     tenant: health?.tenantName ?? latestRun?.tenantName ?? "-",

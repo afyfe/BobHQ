@@ -14,6 +14,16 @@ export async function getTenantManagementList(): Promise<Tenant[]> {
   return tenants.map(mapTenant);
 }
 
+export async function getTenant(tenantId: string): Promise<Tenant> {
+  const tenant = await tenantClient.get<TenantManagementDto>(`/tenants/${tenantId}`);
+  return mapTenant(tenant);
+}
+
+export async function createTenant(input: { name: string; planName?: string }): Promise<Tenant> {
+  const tenant = await tenantClient.post<TenantManagementDto, { name: string; planName?: string }>("/tenants", input);
+  return mapTenant(tenant);
+}
+
 function mapTenant(dto: TenantManagementDto): Tenant {
   return {
     id: dto.tenantId,

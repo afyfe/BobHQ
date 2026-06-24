@@ -69,6 +69,7 @@ function mapConnector(dto: ConnectorDto): Connector {
 
   return {
     id: dto.id,
+    tenantId: "",
     name: dto.name,
     type: "-",
     tenant: dto.tenantName,
