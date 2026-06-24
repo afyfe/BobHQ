@@ -39,7 +39,7 @@ export default function DiscoveryPage() {
           <h2>Surface what operators do not yet know to ask.</h2>
         </div>
         <p>
-          Mock intelligence signals are grouped for triage now, ready to become real discovery workflows later.
+          Discovery signals are grouped for triage now, ready to become guided investigation workflows later.
         </p>
       </section>
       <DataTable columns={columns} rows={findings} getRowKey={(finding) => finding.id} />

@@ -1,5 +1,5 @@
 -- BobHQ operational persistence foundation.
--- Runtime still uses MockDashboardDataService; this schema is for the future SQL Server-backed implementation.
+-- Runtime uses this schema for SQL Server-backed dashboard and tenant management data.
 
 CREATE TABLE dbo.Tenants
 (

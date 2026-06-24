@@ -11,13 +11,13 @@ npm run dev
 npm run build
 ```
 
-Most dashboard pages still use mock data. The connectors view now reads live telemetry from the Bob API connector endpoints.
+Dashboard, tenant, connector, and admin views read live SQL-backed Bob API endpoints.
 
 ## Frontend Data Layer
 
 The control centre pages call `src/services/dashboardService.ts` for dashboard data instead of importing fixtures directly.
 
-The service currently returns typed mock data from `src/data/mockDashboardData.ts` for most dashboard surfaces, with a short simulated delay so loading states are visible during development. Connector health is wired through `src/services/connectorTelemetryService.ts` and calls the live `/api/connectors/latest`, `/api/connectors/health`, and `/api/connectors/runs` endpoints. Tenant lists are read from `/api/tenants`.
+The service layer reads Bob API endpoints directly. Connector health is wired through `src/services/connectorTelemetryService.ts` and calls `/api/connectors/latest`, `/api/connectors/health`, and `/api/connectors/runs`. Tenant lists and tenant creation use `/api/tenants`.
 
 ## Admin Shell
 
@@ -38,42 +38,39 @@ cd services/Bob.Api
 dotnet run
 ```
 
-The API is a .NET 8 Minimal API with mock operational data only. It exposes `/health` plus initial `/api/*` dashboard endpoints and allows local Vite dev requests from `http://localhost:5173`.
+The API is a .NET 8 Minimal API backed by SQL Server. It exposes `/health` plus `/api/*` dashboard, tenant, and connector telemetry endpoints and allows local Vite dev requests from `http://localhost:5173`.
 
-### Data Source Modes
+### SQL Data Source
 
-Mock mode is the default and needs no database:
-
-```json
-{
-  "BobApi": {
-    "DataSource": "Mock"
-  }
-}
-```
-
-SQL read mode is opt-in. Create `services/Bob.Api/appsettings.Development.json` locally:
+SQL mode is required. Create `services/Bob.Api/appsettings.Development.json` locally:
 
 ```json
 {
   "BobApi": {
     "DataSource": "Sql"
   },
+  "TenantManagement": {
+    "DataSource": "Sql"
+  },
+  "ConnectorPersistence": {
+    "Enabled": true
+  },
   "ConnectionStrings": {
-    "BobDb": "Server=localhost;Database=BobHQ_Local;Trusted_Connection=True;TrustServerCertificate=True"
+    "BobDb": "Server=localhost;Database=BobHQ_Local;Trusted_Connection=True;TrustServerCertificate=True",
+    "AskBobSql": "Server=localhost;Database=AskBobLocal;Trusted_Connection=True;TrustServerCertificate=True"
   }
 }
 ```
 
-When `BobApi:DataSource` is `Sql`, the API reads dashboard DTOs with Dapper and `Microsoft.Data.SqlClient`. If `ConnectionStrings:BobDb` is missing or empty, startup fails clearly. Mock mode remains the safe default.
+The API reads dashboard and tenant DTOs from `ConnectionStrings:BobDb`, and connector telemetry from `ConnectionStrings:AskBobSql`. If either required connection string is missing or empty, startup fails clearly.
 
 ## Bob API Persistence
 
 The SQL Server schema foundation lives at `services/Bob.Api/Database/001_initial_bobhq_schema.sql`.
 
-The backend also includes domain records and repository interfaces under `services/Bob.Api/Domain` and `services/Bob.Api/Repositories`. These are design contracts only for now. Runtime behavior defaults to `MockDashboardDataService`, with an opt-in Dapper SQL read mode available through `BobApi:DataSource`. No EF Core, write repositories, auth, or real connector integration has been added yet.
+The backend also includes domain records and repository interfaces under `services/Bob.Api/Domain` and `services/Bob.Api/Repositories`. Runtime behavior is SQL-backed through Dapper and `Microsoft.Data.SqlClient`. No EF Core or in-app auth has been added yet.
 
-`ConnectionStrings:BobDb` is present as an empty placeholder in `services/Bob.Api/appsettings.json` for a future SQL Server-backed implementation.
+`ConnectionStrings:BobDb` and `ConnectionStrings:AskBobSql` are present as empty placeholders in `services/Bob.Api/appsettings.json`; configure them through environment-specific settings or deployment secrets.
 
 ## Connector Runtime
 
@@ -148,7 +145,7 @@ The operational store contains:
 - `ConnectorWarnings`
 - `ConnectorCycleSummaries`
 
-Persistence is disabled by default so mock connector runs still work without a database. To enable it, apply `services/Bob.ConnectorPersistence/Database/sqlserver/001_connector_runtime_schema.sql` and configure both `Bob.Worker` and `Bob.Api`:
+Connector persistence is required for Bob.Api connector telemetry. Apply `services/Bob.ConnectorPersistence/Database/sqlserver/001_connector_runtime_schema.sql` and configure both `Bob.Worker` and `Bob.Api`:
 
 ```json
 {

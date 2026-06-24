@@ -24,7 +24,7 @@ sqlcmd -S localhost -E -d BobHQ_Local -i services/Bob.Api/Database/001_initial_b
 sqlcmd -S localhost -E -d BobHQ_Local -i services/Bob.Api/Database/002_seed_demo_data.sql
 ```
 
-The seed data mirrors the current `MockDashboardDataService` demo cockpit data and can be rerun without inserting duplicate deterministic rows.
+The seed data provides local SQL cockpit data and can be rerun without inserting duplicate deterministic rows.
 
 ## Development Connection String
 
@@ -38,4 +38,4 @@ Create `services/Bob.Api/appsettings.Development.json` locally:
 }
 ```
 
-Runtime still uses `MockDashboardDataService`. The database is not wired into the API yet.
+Runtime reads this database when `BobApi:DataSource` and `TenantManagement:DataSource` are set to `Sql`.

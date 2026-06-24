@@ -1,5 +1,4 @@
-import { createApiClient, createMockApiClient } from "../lib/apiClient";
-import { mockDashboardDto } from "../data/mockDashboardData";
+import { createApiClient } from "../lib/apiClient";
 import { getConnectorTelemetry } from "./connectorTelemetryService";
 import { getTenantManagementList } from "./tenantService";
 import type {
@@ -9,9 +8,6 @@ import type {
   AuditEntryDto,
   ActivityEvent,
   Connector,
-  ConnectorDto,
-  ConnectorRun,
-  DashboardDto,
   DashboardOverview,
   DashboardSummary,
   DashboardSummaryDto,
@@ -23,71 +19,12 @@ import type {
   KnowledgeItemDto,
   Metric,
   Tenant,
-  TenantDto,
   TimelineEventDto,
   User,
   UserDto,
 } from "../types/dashboard";
 
-const mockDelayMs = 180;
-
-const dashboardClient = createMockApiClient({
-  "/dashboard": mockDashboardDto,
-});
-const liveDashboardClient = createApiClient();
-
-async function withMockDelay<TData>(data: TData): Promise<TData> {
-  await new Promise((resolve) => window.setTimeout(resolve, mockDelayMs));
-  return data;
-}
-
-function mapTenant(dto: TenantDto): Tenant {
-  return {
-    id: dto.id,
-    name: dto.name,
-    plan: dto.plan,
-    status: dto.status,
-    users: dto.userCount,
-    connectors: dto.connectorCount,
-    documentsIndexed: dto.documentsIndexed,
-    lastActivity: dto.lastActivityLabel,
-  };
-}
-
-function mapConnector(dto: ConnectorDto): Connector {
-  const latestRun: ConnectorRun | undefined =
-    dto.status === "Syncing" || dto.failureCount > 0
-      ? {
-          id: `${dto.id}-latest-run`,
-          connectorId: dto.id,
-          status: dto.status,
-          progressText: dto.syncProgressLabel ?? undefined,
-          startedAt: dto.lastSuccessfulSyncLabel,
-          failureCount: dto.failureCount,
-        }
-      : undefined;
-
-  return {
-    id: dto.id,
-    tenantId: "",
-    name: dto.name,
-    type: "-",
-    tenant: dto.tenantName,
-    status: dto.status,
-    lastSuccessfulSync: dto.lastSuccessfulSyncLabel,
-    lastRun: dto.lastSuccessfulSyncLabel,
-    lastError: dto.lastErrorMessage ?? "-",
-    itemsIndexed: dto.itemsIndexed,
-    itemsProcessed: dto.itemsIndexed,
-    warningCount: dto.status === "Degraded" ? 1 : 0,
-    errorCount: dto.failureCount,
-    enabled: dto.enabled,
-    syncProgress: dto.syncProgressLabel ?? undefined,
-    lastSyncAge: dto.lastSyncAgeLabel,
-    failureCount: dto.failureCount,
-    latestRun,
-  };
-}
+const dashboardClient = createApiClient();
 
 function mapJob(dto: JobDto): Job {
   return {
@@ -216,25 +153,21 @@ function metricValue(value: number | null, fallback: string): number | string {
   return value === null ? fallback : value;
 }
 
-async function getDashboardDto(): Promise<DashboardDto> {
-  return dashboardClient.get<DashboardDto>("/dashboard");
-}
-
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const summary = await liveDashboardClient.get<DashboardSummaryDto>("/dashboard/summary");
+  const summary = await dashboardClient.get<DashboardSummaryDto>("/dashboard/summary");
   return { metrics: buildOverviewMetrics(summary) };
 }
 
 export async function getDashboardOverview(): Promise<DashboardOverview> {
-  const dashboard = await getDashboardDto();
+  const [summary, tenants, connectors, attentionAlerts, activityEvents] = await Promise.all([
+    getDashboardSummary(),
+    getTenants(),
+    getConnectors(),
+    getAttentionAlerts(),
+    getActivityEvents(),
+  ]);
 
-  return withMockDelay({
-    metrics: buildOverviewMetrics(dashboard.summary),
-    tenants: dashboard.tenants.map(mapTenant),
-    connectors: dashboard.connectors.map(mapConnector),
-    attentionAlerts: dashboard.attentionAlerts.map(mapAttentionAlert),
-    activityEvents: dashboard.timelineEvents.map(mapActivityEvent),
-  });
+  return { ...summary, tenants, connectors, attentionAlerts, activityEvents };
 }
 
 export async function getTenants(): Promise<Tenant[]> {
@@ -246,36 +179,36 @@ export async function getConnectors(): Promise<Connector[]> {
 }
 
 export async function getJobs(): Promise<Job[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.jobs.map(mapJob));
+  const jobs = await dashboardClient.get<JobDto[]>("/jobs");
+  return jobs.map(mapJob);
 }
 
 export async function getAuditEntries(): Promise<AuditEntry[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.auditEntries.map(mapAuditEntry));
+  const auditEntries = await dashboardClient.get<AuditEntryDto[]>("/audit");
+  return auditEntries.map(mapAuditEntry);
 }
 
 export async function getKnowledgeItems(): Promise<KnowledgeItem[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.knowledgeItems.map(mapKnowledgeItem));
+  const knowledgeItems = await dashboardClient.get<KnowledgeItemDto[]>("/knowledge");
+  return knowledgeItems.map(mapKnowledgeItem);
 }
 
 export async function getUsers(): Promise<User[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.users.map(mapUser));
+  const users = await dashboardClient.get<UserDto[]>("/users");
+  return users.map(mapUser);
 }
 
 export async function getDiscoveryFindings(): Promise<DiscoveryFinding[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.discoveryFindings.map(mapDiscoveryFinding));
+  const findings = await dashboardClient.get<DiscoveryFindingDto[]>("/discovery");
+  return findings.map(mapDiscoveryFinding);
 }
 
 export async function getAttentionAlerts(): Promise<AttentionAlert[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.attentionAlerts.map(mapAttentionAlert));
+  const alerts = await dashboardClient.get<AttentionAlertDto[]>("/attention");
+  return alerts.map(mapAttentionAlert);
 }
 
 export async function getActivityEvents(): Promise<ActivityEvent[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.timelineEvents.map(mapActivityEvent));
+  const events = await dashboardClient.get<TimelineEventDto[]>("/activity");
+  return events.map(mapActivityEvent);
 }

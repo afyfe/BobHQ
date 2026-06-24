@@ -19,32 +19,61 @@ builder.Services.AddCors(options =>
     });
 });
 
-var dataSource = builder.Configuration["BobApi:DataSource"] ?? "Mock";
+var dataSource = builder.Configuration["BobApi:DataSource"] ?? "Sql";
+var bobDbConnectionString = builder.Configuration.GetConnectionString("BobDb");
+var hasBobDbConnectionString = !string.IsNullOrWhiteSpace(bobDbConnectionString);
+var sqlConnectionFactoryRegistered = false;
 
 if (string.Equals(dataSource, "Sql", StringComparison.OrdinalIgnoreCase))
 {
-    var connectionString = builder.Configuration.GetConnectionString("BobDb");
-
-    if (string.IsNullOrWhiteSpace(connectionString))
+    if (!hasBobDbConnectionString)
     {
         throw new InvalidOperationException("BobApi:DataSource is set to Sql, but ConnectionStrings:BobDb is missing or empty.");
     }
 
     builder.Services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+    sqlConnectionFactoryRegistered = true;
     builder.Services.AddSingleton<IDashboardDataService, SqlDashboardDataService>();
-    builder.Services.AddSingleton<ITenantRepository, SqlTenantRepository>();
 }
 else if (string.Equals(dataSource, "Mock", StringComparison.OrdinalIgnoreCase))
 {
-    builder.Services.AddSingleton<IDashboardDataService, MockDashboardDataService>();
-    builder.Services.AddSingleton<ITenantRepository, InMemoryTenantRepository>();
+    throw new InvalidOperationException("BobApi:DataSource=Mock is no longer supported. Configure BobApi:DataSource=Sql.");
 }
 else
 {
-    throw new InvalidOperationException($"Unsupported BobApi:DataSource value '{dataSource}'. Valid values are 'Mock' and 'Sql'.");
+    throw new InvalidOperationException($"Unsupported BobApi:DataSource value '{dataSource}'. Valid value is 'Sql'.");
 }
 
-var connectorPersistenceEnabled = builder.Configuration.GetValue("ConnectorPersistence:Enabled", false);
+var tenantDataSource = builder.Configuration["TenantManagement:DataSource"]
+    ?? "Sql";
+
+if (string.Equals(tenantDataSource, "Sql", StringComparison.OrdinalIgnoreCase))
+{
+    if (!hasBobDbConnectionString)
+    {
+        throw new InvalidOperationException(
+            "TenantManagement:DataSource is set to Sql, but ConnectionStrings:BobDb is missing or empty.");
+    }
+
+    if (!sqlConnectionFactoryRegistered)
+    {
+        builder.Services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+    }
+
+    builder.Services.AddSingleton<ITenantRepository, SqlTenantRepository>();
+}
+else if (string.Equals(tenantDataSource, "Memory", StringComparison.OrdinalIgnoreCase))
+{
+    throw new InvalidOperationException(
+        "TenantManagement:DataSource=Memory is no longer supported. Configure TenantManagement:DataSource=Sql.");
+}
+else
+{
+    throw new InvalidOperationException(
+        $"Unsupported TenantManagement:DataSource value '{tenantDataSource}'. Valid value is 'Sql'.");
+}
+
+var connectorPersistenceEnabled = builder.Configuration.GetValue("ConnectorPersistence:Enabled", true);
 
 if (connectorPersistenceEnabled)
 {
@@ -62,7 +91,8 @@ if (connectorPersistenceEnabled)
 }
 else
 {
-    builder.Services.AddSingleton<IConnectorRunReader, NullConnectorRunRepository>();
+    throw new InvalidOperationException(
+        "ConnectorPersistence:Enabled=false is no longer supported for Bob.Api. Configure ConnectorPersistence:Enabled=true.");
 }
 
 var app = builder.Build();
