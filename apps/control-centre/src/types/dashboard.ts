@@ -285,13 +285,14 @@ export type DashboardOverview = DashboardSummary & {
 };
 
 export type DashboardSummaryDto = {
-  activeTenantDeltaLabel: string;
-  connectorHealthPercent: number;
-  connectorAttentionLabel: string;
-  documentsIndexedDeltaLabel: string;
-  emailsIndexedDeltaLabel: string;
-  aiRequestsToday: number;
-  explainabilityRateLabel: string;
+  activeTenantCount: number | null;
+  totalTenantCount: number | null;
+  connectorHealthPercent: number | null;
+  degradedConnectorCount: number | null;
+  attentionRequiredCount: number | null;
+  connectorCycleCount: number | null;
+  connectorItemsProcessed: number | null;
+  discoveryFindingCount: number | null;
 };
 
 export type DashboardDto = {

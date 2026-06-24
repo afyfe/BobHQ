@@ -1,4 +1,4 @@
-import { createMockApiClient } from "../lib/apiClient";
+import { createApiClient, createMockApiClient } from "../lib/apiClient";
 import { mockDashboardDto } from "../data/mockDashboardData";
 import { getConnectorTelemetry } from "./connectorTelemetryService";
 import { getTenantManagementList } from "./tenantService";
@@ -14,6 +14,7 @@ import type {
   DashboardDto,
   DashboardOverview,
   DashboardSummary,
+  DashboardSummaryDto,
   DiscoveryFinding,
   DiscoveryFindingDto,
   Job,
@@ -33,6 +34,7 @@ const mockDelayMs = 180;
 const dashboardClient = createMockApiClient({
   "/dashboard": mockDashboardDto,
 });
+const liveDashboardClient = createApiClient();
 
 async function withMockDelay<TData>(data: TData): Promise<TData> {
   await new Promise((resolve) => window.setTimeout(resolve, mockDelayMs));
@@ -171,23 +173,46 @@ function mapDiscoveryFinding(dto: DiscoveryFindingDto): DiscoveryFinding {
   };
 }
 
-function buildOverviewMetrics(dashboard: DashboardDto): Metric[] {
-  const activeTenants = dashboard.tenants.filter((tenant) => tenant.status === "Active").length;
-  const documentsIndexed = dashboard.knowledgeItems.reduce((total, item) => total + item.documentCount, 0);
-  const emailsIndexed = dashboard.knowledgeItems.reduce((total, item) => total + item.emailCount, 0);
-  const queued = dashboard.jobs.filter((job) => job.status === "Queued").length;
-  const running = dashboard.jobs.filter((job) => job.status === "Running").length;
-  const failed = dashboard.jobs.filter((job) => job.status === "Failed").length;
+function buildOverviewMetrics(summary: DashboardSummaryDto): Metric[] {
+  const noData = "No data yet";
 
   return [
-    { label: "Active tenants", value: activeTenants, delta: dashboard.summary.activeTenantDeltaLabel },
-    { label: "Connector health", value: `${dashboard.summary.connectorHealthPercent}%`, delta: dashboard.summary.connectorAttentionLabel },
-    { label: "Documents indexed", value: documentsIndexed, delta: dashboard.summary.documentsIndexedDeltaLabel },
-    { label: "Emails indexed", value: emailsIndexed, delta: dashboard.summary.emailsIndexedDeltaLabel },
-    { label: "Jobs active", value: `${queued} / ${running} / ${failed}`, delta: "queued / running / failed" },
-    { label: "AI requests today", value: dashboard.summary.aiRequestsToday, delta: dashboard.summary.explainabilityRateLabel },
-    { label: "Explainability Coverage", value: "98.7%", subtitle: "answers with traceable sources" },
+    {
+      label: "Active tenants",
+      value: metricValue(summary.activeTenantCount, noData),
+      delta: summary.totalTenantCount === null ? "Tenants table" : `${summary.totalTenantCount} total tenants`,
+    },
+    {
+      label: "Connector health",
+      value: summary.connectorHealthPercent === null ? noData : `${summary.connectorHealthPercent}%`,
+      delta:
+        summary.degradedConnectorCount === null
+          ? "Latest ConnectorRuns"
+          : `${summary.degradedConnectorCount} degraded / failed`,
+    },
+    {
+      label: "Attention required",
+      value: metricValue(summary.attentionRequiredCount, noData),
+      delta: "open alerts",
+    },
+    {
+      label: "Items processed",
+      value: metricValue(summary.connectorItemsProcessed, noData),
+      delta:
+        summary.connectorCycleCount === null
+          ? "ConnectorCycleSummaries"
+          : `${summary.connectorCycleCount} connector cycles`,
+    },
+    {
+      label: "Discovery findings",
+      value: metricValue(summary.discoveryFindingCount, noData),
+      delta: "DiscoveryFindings",
+    },
   ];
+}
+
+function metricValue(value: number | null, fallback: string): number | string {
+  return value === null ? fallback : value;
 }
 
 async function getDashboardDto(): Promise<DashboardDto> {
@@ -195,15 +220,15 @@ async function getDashboardDto(): Promise<DashboardDto> {
 }
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay({ metrics: buildOverviewMetrics(dashboard) });
+  const summary = await liveDashboardClient.get<DashboardSummaryDto>("/dashboard/summary");
+  return { metrics: buildOverviewMetrics(summary) };
 }
 
 export async function getDashboardOverview(): Promise<DashboardOverview> {
   const dashboard = await getDashboardDto();
 
   return withMockDelay({
-    metrics: buildOverviewMetrics(dashboard),
+    metrics: buildOverviewMetrics(dashboard.summary),
     tenants: dashboard.tenants.map(mapTenant),
     connectors: dashboard.connectors.map(mapConnector),
     attentionAlerts: dashboard.attentionAlerts.map(mapAttentionAlert),

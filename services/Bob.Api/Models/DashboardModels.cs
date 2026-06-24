@@ -13,13 +13,14 @@ public sealed record DashboardDto(
     IReadOnlyList<DiscoveryFindingDto> DiscoveryFindings);
 
 public sealed record DashboardSummaryDto(
-    string ActiveTenantDeltaLabel,
-    int ConnectorHealthPercent,
-    string ConnectorAttentionLabel,
-    string DocumentsIndexedDeltaLabel,
-    string EmailsIndexedDeltaLabel,
-    int AiRequestsToday,
-    string ExplainabilityRateLabel);
+    int? ActiveTenantCount,
+    int? TotalTenantCount,
+    int? ConnectorHealthPercent,
+    int? DegradedConnectorCount,
+    int? AttentionRequiredCount,
+    int? ConnectorCycleCount,
+    long? ConnectorItemsProcessed,
+    int? DiscoveryFindingCount);
 
 public sealed record TenantDto(
     string Id,

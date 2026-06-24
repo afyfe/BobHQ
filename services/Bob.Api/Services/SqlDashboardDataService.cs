@@ -29,23 +29,21 @@ public sealed class SqlDashboardDataService : IDashboardDataService
     {
         using var connection = connectionFactory.CreateConnection();
 
-        var activeTenants = connection.ExecuteScalar<int>("select count(*) from dbo.Tenants where Status = 'Active'");
-        var enabledConnectors = connection.ExecuteScalar<int>("select count(*) from dbo.Connectors where IsEnabled = 1");
-        var healthyConnectors = connection.ExecuteScalar<int>("select count(*) from dbo.Connectors where IsEnabled = 1 and Status = 'Healthy'");
-        var documentsIndexed = connection.ExecuteScalar<int>("select coalesce(sum(DocumentCount), 0) from dbo.KnowledgeItems");
-        var emailsIndexed = connection.ExecuteScalar<int>("select coalesce(sum(EmailCount), 0) from dbo.KnowledgeItems");
-        var aiRequestsToday = connection.ExecuteScalar<int>("select count(*) from dbo.AuditEntries where CreatedUtc >= dateadd(day, -1, sysutcdatetime())");
-        var connectorHealthPercent = enabledConnectors == 0 ? 100 : (int)Math.Round(healthyConnectors * 100m / enabledConnectors);
-        var attentionCount = connection.ExecuteScalar<int>("select count(*) from dbo.AttentionAlerts where Status = 'Open'");
+        var tenantSummary = GetTenantSummary(connection);
+        var connectorSummary = GetConnectorRunSummary(connection);
+        var attentionSummary = GetAttentionSummary(connection);
+        var cycleSummary = GetConnectorCycleSummary(connection);
+        var discoverySummary = GetDiscoverySummary(connection);
 
         return new DashboardSummaryDto(
-            ActiveTenantDeltaLabel: "+1 this week",
-            ConnectorHealthPercent: connectorHealthPercent,
-            ConnectorAttentionLabel: $"{attentionCount} need attention",
-            DocumentsIndexedDeltaLabel: $"{FormatCompact(documentsIndexed)} indexed",
-            EmailsIndexedDeltaLabel: emailsIndexed > 0 ? "syncing now" : "no email corpus",
-            AiRequestsToday: aiRequestsToday,
-            ExplainabilityRateLabel: "98.7% explainable");
+            ActiveTenantCount: tenantSummary?.ActiveCount,
+            TotalTenantCount: tenantSummary?.TotalCount,
+            ConnectorHealthPercent: connectorSummary?.HealthPercent,
+            DegradedConnectorCount: connectorSummary?.DegradedCount,
+            AttentionRequiredCount: attentionSummary?.OpenCount,
+            ConnectorCycleCount: cycleSummary?.CycleCount,
+            ConnectorItemsProcessed: cycleSummary?.ItemsProcessed,
+            DiscoveryFindingCount: discoverySummary?.FindingCount);
     }
 
     public IReadOnlyList<TenantDto> GetTenants()
@@ -269,8 +267,153 @@ public sealed class SqlDashboardDataService : IDashboardDataService
         return connection.Query<UserDto>(sql).AsList();
     }
 
-    private static string FormatCompact(int value)
+    private static TenantSummary? GetTenantSummary(System.Data.IDbConnection connection)
     {
-        return value >= 1000 ? $"{value / 1000m:0.#}k" : value.ToString();
+        if (!TableExists(connection, "Tenants"))
+        {
+            return null;
+        }
+
+        var totalCount = connection.ExecuteScalar<int>("select count(*) from dbo.Tenants;");
+
+        if (totalCount == 0)
+        {
+            return null;
+        }
+
+        var activeCount = connection.ExecuteScalar<int>("select count(*) from dbo.Tenants where Status = 'Active';");
+        return new TenantSummary(totalCount, activeCount);
     }
+
+    private static ConnectorRunSummary? GetConnectorRunSummary(System.Data.IDbConnection connection)
+    {
+        if (!TableExists(connection, "ConnectorRuns"))
+        {
+            return null;
+        }
+
+        const string totalSql = """
+            with LatestRuns as
+            (
+                select
+                    row_number() over (partition by ConnectorId order by StartedUtc desc) as RowNumber
+                from dbo.ConnectorRuns
+            )
+            select count(*)
+            from LatestRuns
+            where RowNumber = 1;
+            """;
+
+        var totalCount = connection.ExecuteScalar<int>(totalSql);
+
+        if (totalCount == 0)
+        {
+            return null;
+        }
+
+        const string healthySql = """
+            with LatestRuns as
+            (
+                select
+                    Status,
+                    row_number() over (partition by ConnectorId order by StartedUtc desc) as RowNumber
+                from dbo.ConnectorRuns
+            )
+            select count(*)
+            from LatestRuns
+            where RowNumber = 1 and Status in ('Healthy', 'Completed');
+            """;
+
+        const string degradedSql = """
+            with LatestRuns as
+            (
+                select
+                    Status,
+                    row_number() over (partition by ConnectorId order by StartedUtc desc) as RowNumber
+                from dbo.ConnectorRuns
+            )
+            select count(*)
+            from LatestRuns
+            where RowNumber = 1 and Status in ('Degraded', 'Failed', 'Error');
+            """;
+
+        return new ConnectorRunSummary(
+            totalCount,
+            connection.ExecuteScalar<int>(healthySql),
+            connection.ExecuteScalar<int>(degradedSql));
+    }
+
+    private static AttentionSummary? GetAttentionSummary(System.Data.IDbConnection connection)
+    {
+        if (!TableExists(connection, "AttentionAlerts"))
+        {
+            return null;
+        }
+
+        var totalCount = connection.ExecuteScalar<int>("select count(*) from dbo.AttentionAlerts;");
+
+        if (totalCount == 0)
+        {
+            return null;
+        }
+
+        var openCount = connection.ExecuteScalar<int>("select count(*) from dbo.AttentionAlerts where Status = 'Open';");
+        return new AttentionSummary(totalCount, openCount);
+    }
+
+    private static ConnectorCycleSummaryMetrics? GetConnectorCycleSummary(System.Data.IDbConnection connection)
+    {
+        if (!TableExists(connection, "ConnectorCycleSummaries"))
+        {
+            return null;
+        }
+
+        var cycleCount = connection.ExecuteScalar<int>("select count(*) from dbo.ConnectorCycleSummaries;");
+
+        if (cycleCount == 0)
+        {
+            return null;
+        }
+
+        var itemsProcessed = connection.ExecuteScalar<long>(
+            "select coalesce(sum(cast(ItemsProcessed as bigint)), 0) from dbo.ConnectorCycleSummaries;");
+
+        return new ConnectorCycleSummaryMetrics(cycleCount, itemsProcessed);
+    }
+
+    private static DiscoverySummary? GetDiscoverySummary(System.Data.IDbConnection connection)
+    {
+        if (!TableExists(connection, "DiscoveryFindings"))
+        {
+            return null;
+        }
+
+        var findingCount = connection.ExecuteScalar<int>("select count(*) from dbo.DiscoveryFindings;");
+        return findingCount == 0 ? null : new DiscoverySummary(findingCount);
+    }
+
+    private static bool TableExists(System.Data.IDbConnection connection, string tableName)
+    {
+        const string sql = """
+            select count(*)
+            from sys.tables tableInfo
+            inner join sys.schemas schemaInfo on schemaInfo.schema_id = tableInfo.schema_id
+            where schemaInfo.name = 'dbo' and tableInfo.name = @TableName;
+            """;
+
+        return connection.ExecuteScalar<int>(sql, new { TableName = tableName }) > 0;
+    }
+
+    private sealed record TenantSummary(int TotalCount, int ActiveCount);
+
+    private sealed record ConnectorRunSummary(int TotalCount, int HealthyCount, int DegradedCount)
+    {
+        public int HealthPercent => TotalCount == 0 ? 0 : (int)Math.Round(HealthyCount * 100m / TotalCount);
+    }
+
+    private sealed record AttentionSummary(int TotalCount, int OpenCount);
+
+    private sealed record ConnectorCycleSummaryMetrics(int CycleCount, long ItemsProcessed);
+
+    private sealed record DiscoverySummary(int FindingCount);
 }

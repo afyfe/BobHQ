@@ -6,13 +6,14 @@ public sealed class MockDashboardDataService : IDashboardDataService
 {
     private readonly DashboardDto dashboard = new(
         new DashboardSummaryDto(
-            ActiveTenantDeltaLabel: "+1 this week",
-            ConnectorHealthPercent: 72,
-            ConnectorAttentionLabel: "3 need attention",
-            DocumentsIndexedDeltaLabel: "+8.4k today",
-            EmailsIndexedDeltaLabel: "syncing now",
-            AiRequestsToday: 1427,
-            ExplainabilityRateLabel: "98.7% explainable"),
+            ActiveTenantCount: null,
+            TotalTenantCount: null,
+            ConnectorHealthPercent: null,
+            DegradedConnectorCount: null,
+            AttentionRequiredCount: null,
+            ConnectorCycleCount: null,
+            ConnectorItemsProcessed: null,
+            DiscoveryFindingCount: null),
         Tenants:
         [
             new("tenant-nova", "Nova Financial", "Enterprise", "Active", 84, 6, 182450, "3 min ago"),

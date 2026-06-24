@@ -392,13 +392,14 @@ const discoveryFindings: DashboardDto["discoveryFindings"] = [
 
 export const mockDashboardDto: DashboardDto = {
   summary: {
-    activeTenantDeltaLabel: "+1 this week",
-    connectorHealthPercent: 72,
-    connectorAttentionLabel: "3 need attention",
-    documentsIndexedDeltaLabel: "+8.4k today",
-    emailsIndexedDeltaLabel: "syncing now",
-    aiRequestsToday: 1427,
-    explainabilityRateLabel: "98.7% explainable",
+    activeTenantCount: null,
+    totalTenantCount: null,
+    connectorHealthPercent: null,
+    degradedConnectorCount: null,
+    attentionRequiredCount: null,
+    connectorCycleCount: null,
+    connectorItemsProcessed: null,
+    discoveryFindingCount: null,
   },
   tenants,
   connectors,

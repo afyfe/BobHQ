@@ -25,6 +25,10 @@ The control centre includes an `/admin` route with a Tenant Management page and 
 
 Before tenant creation is enabled in the UI or exposed publicly, `hq.askbob.live` must be protected by Cloudflare Access. Bob.Api tenant-management endpoints are temporarily unauthenticated so Cloudflare Access can be the enforcement boundary; do not expose them on an unprotected public origin.
 
+## Overview Metrics
+
+The Overview KPI cards read `/api/dashboard/summary`. In SQL mode, the summary is calculated from `dbo.Tenants`, `dbo.ConnectorRuns`, `dbo.ConnectorCycleSummaries`, `dbo.DiscoveryFindings`, and `dbo.AttentionAlerts`. Empty or missing source tables are returned as no data so the UI displays `No data yet` rather than demo values.
+
 `VITE_API_BASE_URL` is supported by `src/lib/apiClient.ts` and will point to the future BobHQ API base URL when backend integration starts.
 
 ## Bob API
@@ -167,6 +171,7 @@ Bob.Api exposes connector telemetry read endpoints:
 
 Bob.Api also exposes tenant-management endpoints:
 
+- `GET /api/dashboard/summary`
 - `GET /api/tenants`
 - `GET /api/tenants/{tenantId}`
 - `POST /api/tenants`
