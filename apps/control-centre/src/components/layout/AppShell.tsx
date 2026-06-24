@@ -1,15 +1,24 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 
-const navItems = [
-  { label: "Overview", to: "/overview", icon: "O" },
-  { label: "Tenants", to: "/tenants", icon: "T" },
-  { label: "Connectors", to: "/connectors", icon: "C" },
-  { label: "Jobs", to: "/jobs", icon: "J" },
-  { label: "Knowledge", to: "/knowledge", icon: "K" },
-  { label: "Audit", to: "/audit", icon: "A" },
-  { label: "Discovery", to: "/discovery", icon: "D" },
-  { label: "Users", to: "/users", icon: "U" },
+const navGroups = [
+  {
+    label: "Control",
+    items: [
+      { label: "Overview", to: "/overview", icon: "O" },
+      { label: "Tenants", to: "/tenants", icon: "T" },
+      { label: "Connectors", to: "/connectors", icon: "C" },
+      { label: "Jobs", to: "/jobs", icon: "J" },
+      { label: "Knowledge", to: "/knowledge", icon: "K" },
+      { label: "Audit", to: "/audit", icon: "A" },
+      { label: "Discovery", to: "/discovery", icon: "D" },
+      { label: "Users", to: "/users", icon: "U" },
+    ],
+  },
+  {
+    label: "Admin",
+    items: [{ label: "Tenant Management", to: "/admin", icon: "M" }],
+  },
 ];
 
 type AppShellProps = {
@@ -29,11 +38,16 @@ export default function AppShell({ children }: AppShellProps) {
         </div>
 
         <nav className="sidebar__nav">
-          {navItems.map((item) => (
-            <NavLink className="nav-link" to={item.to} key={item.to}>
-              <span aria-hidden="true">{item.icon}</span>
-              {item.label}
-            </NavLink>
+          {navGroups.map((group) => (
+            <section className="nav-section" key={group.label}>
+              <span className="nav-section__label">{group.label}</span>
+              {group.items.map((item) => (
+                <NavLink className="nav-link" to={item.to} key={item.to}>
+                  <span aria-hidden="true">{item.icon}</span>
+                  {item.label}
+                </NavLink>
+              ))}
+            </section>
           ))}
         </nav>
 

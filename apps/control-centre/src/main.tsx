@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
+import AdminTenantsPage from "./pages/AdminTenantsPage";
 import AuditPage from "./pages/AuditPage";
 import ConnectorsPage from "./pages/ConnectorsPage";
 import DiscoveryPage from "./pages/DiscoveryPage";
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/overview" replace /> },
       { path: "overview", element: <OverviewPage /> },
+      { path: "admin", element: <AdminTenantsPage /> },
       { path: "tenants", element: <TenantsPage /> },
       { path: "connectors", element: <ConnectorsPage /> },
       { path: "jobs", element: <JobsPage /> },

@@ -11,13 +11,19 @@ npm run dev
 npm run build
 ```
 
-The current UI uses mock data only. Backend wiring can be added behind the `src/services` layer without changing page components.
+Most dashboard pages still use mock data. The connectors view now reads live telemetry from the Bob API connector endpoints.
 
 ## Frontend Data Layer
 
 The control centre pages call `src/services/dashboardService.ts` for dashboard data instead of importing fixtures directly.
 
-The service currently returns typed mock data from `src/data/mockDashboardData.ts` with a short simulated delay so loading states are visible during development. Future AskBob HQ API wiring can replace the service implementation without changing page-level UI code.
+The service currently returns typed mock data from `src/data/mockDashboardData.ts` for most dashboard surfaces, with a short simulated delay so loading states are visible during development. Connector health is wired through `src/services/connectorTelemetryService.ts` and calls the live `/api/connectors/latest`, `/api/connectors/health`, and `/api/connectors/runs` endpoints. Tenant lists are read from `/api/tenants`.
+
+## Admin Shell
+
+The control centre includes an `/admin` route with a Tenant Management page and a disabled Create Tenant modal placeholder. Authentication is intentionally external for now.
+
+Before tenant creation is enabled in the UI or exposed publicly, `hq.askbob.live` must be protected by Cloudflare Access. Bob.Api tenant-management endpoints are temporarily unauthenticated so Cloudflare Access can be the enforcement boundary; do not expose them on an unprotected public origin.
 
 `VITE_API_BASE_URL` is supported by `src/lib/apiClient.ts` and will point to the future BobHQ API base URL when backend integration starts.
 
@@ -158,5 +164,13 @@ Bob.Api exposes connector telemetry read endpoints:
 - `GET /api/connectors/runs`
 - `GET /api/connectors/health`
 - `GET /api/connectors/latest`
+
+Bob.Api also exposes tenant-management endpoints:
+
+- `GET /api/tenants`
+- `GET /api/tenants/{tenantId}`
+- `POST /api/tenants`
+
+`POST /api/tenants` defaults `PlanName` to `Internal Preview` and `Status` to `Active`, validates that `Name` is present, and returns `409` when a tenant name already exists.
 
 See `services/Bob.ConnectorPersistence/Database/README.md` for local SQL Server bootstrap steps.

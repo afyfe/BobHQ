@@ -1,5 +1,7 @@
 import { createMockApiClient } from "../lib/apiClient";
 import { mockDashboardDto } from "../data/mockDashboardData";
+import { getConnectorTelemetry } from "./connectorTelemetryService";
+import { getTenantManagementList } from "./tenantService";
 import type {
   AttentionAlert,
   AttentionAlertDto,
@@ -66,11 +68,16 @@ function mapConnector(dto: ConnectorDto): Connector {
   return {
     id: dto.id,
     name: dto.name,
+    type: "-",
     tenant: dto.tenantName,
     status: dto.status,
     lastSuccessfulSync: dto.lastSuccessfulSyncLabel,
+    lastRun: dto.lastSuccessfulSyncLabel,
     lastError: dto.lastErrorMessage ?? "-",
     itemsIndexed: dto.itemsIndexed,
+    itemsProcessed: dto.itemsIndexed,
+    warningCount: dto.status === "Degraded" ? 1 : 0,
+    errorCount: dto.failureCount,
     enabled: dto.enabled,
     syncProgress: dto.syncProgressLabel ?? undefined,
     lastSyncAge: dto.lastSyncAgeLabel,
@@ -205,13 +212,11 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
 }
 
 export async function getTenants(): Promise<Tenant[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.tenants.map(mapTenant));
+  return getTenantManagementList();
 }
 
 export async function getConnectors(): Promise<Connector[]> {
-  const dashboard = await getDashboardDto();
-  return withMockDelay(dashboard.connectors.map(mapConnector));
+  return getConnectorTelemetry();
 }
 
 export async function getJobs(): Promise<Job[]> {

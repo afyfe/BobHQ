@@ -149,6 +149,7 @@ CREATE TABLE dbo.DiscoveryFindings
 );
 
 CREATE UNIQUE INDEX UX_Users_Email ON dbo.Users(Email);
+CREATE UNIQUE INDEX UX_Tenants_Name ON dbo.Tenants(Name);
 CREATE INDEX IX_Tenants_Status ON dbo.Tenants(Status);
 CREATE INDEX IX_Tenants_CreatedUtc ON dbo.Tenants(CreatedUtc);
 

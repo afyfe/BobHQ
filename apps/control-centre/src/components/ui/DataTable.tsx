@@ -10,9 +10,10 @@ type DataTableProps<T> = {
   columns: Column<T>[];
   rows: T[];
   getRowKey: (item: T) => string;
+  getRowClassName?: (item: T) => string | undefined;
 };
 
-export default function DataTable<T>({ columns, rows, getRowKey }: DataTableProps<T>) {
+export default function DataTable<T>({ columns, rows, getRowKey, getRowClassName }: DataTableProps<T>) {
   return (
     <div className="table-shell">
       <table>
@@ -25,7 +26,7 @@ export default function DataTable<T>({ columns, rows, getRowKey }: DataTableProp
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={getRowKey(row)}>
+            <tr className={getRowClassName?.(row)} key={getRowKey(row)}>
               {columns.map((column) => (
                 <td key={column.key}>{column.render(row)}</td>
               ))}

@@ -1,5 +1,6 @@
 using Bob.Api.Endpoints;
 using Bob.Api.Data;
+using Bob.Api.Repositories;
 using Bob.Api.Services;
 using Bob.ConnectorPersistence.Abstractions;
 using Bob.ConnectorPersistence.Data;
@@ -31,10 +32,12 @@ if (string.Equals(dataSource, "Sql", StringComparison.OrdinalIgnoreCase))
 
     builder.Services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
     builder.Services.AddSingleton<IDashboardDataService, SqlDashboardDataService>();
+    builder.Services.AddSingleton<ITenantRepository, SqlTenantRepository>();
 }
 else if (string.Equals(dataSource, "Mock", StringComparison.OrdinalIgnoreCase))
 {
     builder.Services.AddSingleton<IDashboardDataService, MockDashboardDataService>();
+    builder.Services.AddSingleton<ITenantRepository, InMemoryTenantRepository>();
 }
 else
 {
@@ -68,6 +71,7 @@ app.UseCors("ViteDev");
 
 app.MapGet("/health", () => Results.Ok("OK"));
 app.MapDashboardEndpoints();
+app.MapTenantEndpoints();
 app.MapConnectorRunEndpoints();
 
 app.Run();

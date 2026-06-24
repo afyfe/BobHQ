@@ -9,20 +9,38 @@ import { getConnectors } from "../services/dashboardService";
 import type { Connector } from "../types/dashboard";
 
 const columns: Column<Connector>[] = [
-  { key: "name", header: "Connector", render: (connector) => <strong>{connector.name}</strong> },
-  { key: "tenant", header: "Tenant", render: (connector) => connector.tenant },
+  {
+    key: "name",
+    header: "Connector",
+    render: (connector) => (
+      <div className="table-primary">
+        <strong>{connector.name}</strong>
+        <span>{connector.tenant}</span>
+      </div>
+    ),
+  },
+  { key: "type", header: "Type", render: (connector) => connector.type },
   { key: "status", header: "Status", render: (connector) => <StatusPill status={connector.status} /> },
-  { key: "sync", header: "Last successful sync", render: (connector) => connector.lastSuccessfulSync },
-  { key: "age", header: "Last sync age", render: (connector) => connector.lastSyncAge },
-  { key: "progress", header: "Sync progress", render: (connector) => connector.syncProgress ?? "-" },
-  { key: "error", header: "Last error", render: (connector) => connector.lastError },
-  { key: "failures", header: "Failures", render: (connector) => connector.failureCount },
-  { key: "items", header: "Items indexed", render: (connector) => formatNumber(connector.itemsIndexed) },
-  { key: "enabled", header: "Enabled", render: (connector) => (connector.enabled ? "Enabled" : "Disabled") },
+  {
+    key: "lastRun",
+    header: "Last run",
+    render: (connector) => (
+      <div className="table-primary">
+        <span>{connector.lastRun}</span>
+        <small>{connector.lastSyncAge}</small>
+      </div>
+    ),
+  },
+  { key: "items", header: "Items processed", render: (connector) => formatNumber(connector.itemsProcessed) },
+  {
+    key: "signals",
+    header: "Warnings / Errors",
+    render: (connector) => `${connector.warningCount} / ${connector.errorCount}`,
+  },
 ];
 
 export default function ConnectorsPage() {
-  const { data: connectors, error, isLoading } = useServiceData(getConnectors);
+  const { data: connectors, error, isLoading, isRefreshing, reload } = useServiceData(getConnectors);
 
   if (isLoading) {
     return <LoadingState label="Loading connector health" />;
@@ -39,7 +57,22 @@ export default function ConnectorsPage() {
         title="Connectors"
         description="Source connectors, sync freshness, and clear failure signals for the ingestion surface."
       />
-      <DataTable columns={columns} rows={connectors} getRowKey={(connector) => connector.id} />
+      <div className="toolbar">
+        <span>{connectors.length} live connectors</span>
+        <button className="button" type="button" onClick={reload} disabled={isRefreshing}>
+          {isRefreshing ? "Refreshing" : "Refresh"}
+        </button>
+      </div>
+      {connectors.length > 0 ? (
+        <DataTable
+          columns={columns}
+          rows={connectors}
+          getRowKey={(connector) => connector.id}
+          getRowClassName={(connector) => (connector.status === "Degraded" ? "table-row--degraded" : undefined)}
+        />
+      ) : (
+        <div className="state-panel">No connector telemetry has been recorded yet.</div>
+      )}
     </div>
   );
 }

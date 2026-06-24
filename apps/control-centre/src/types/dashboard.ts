@@ -9,7 +9,7 @@ export type TimelineEventStatus = "Healthy" | "Running" | "Completed" | "Failed"
 export type ExplainabilityStatus = "Fully sourced" | "Partially sourced" | "Needs review";
 export type DiscoverySeverity = "warning" | "critical" | "info";
 
-export type TenantPlan = "Pilot" | "Growth" | "Enterprise";
+export type TenantPlan = string;
 export type UserRole = "Owner" | "Operator" | "Analyst" | "Reviewer";
 
 export type Metric = {
@@ -30,6 +30,19 @@ export type TenantDto = {
   lastActivityLabel: string;
 };
 
+export type TenantManagementDto = {
+  tenantId: string;
+  name: string;
+  planName: string;
+  status: string;
+  userCount: number;
+  connectorCount: number;
+  documentsIndexed: number;
+  lastActivityUtc: string | null;
+  createdUtc: string;
+  updatedUtc: string;
+};
+
 export type Tenant = {
   id: string;
   name: string;
@@ -39,6 +52,8 @@ export type Tenant = {
   connectors: number;
   documentsIndexed: number;
   lastActivity: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type ConnectorDto = {
@@ -55,14 +70,48 @@ export type ConnectorDto = {
   failureCount: number;
 };
 
+export type ConnectorRunTelemetryDto = {
+  connectorRunId: string;
+  connectorId: string;
+  tenantId: string;
+  tenantName: string;
+  connectorName: string;
+  connectorType: string;
+  status: string;
+  startedUtc: string;
+  completedUtc: string;
+  durationMilliseconds: number;
+  itemsProcessed: number;
+  warningCount: number;
+  errorCount: number;
+};
+
+export type ConnectorHealthTelemetryDto = {
+  connectorId: string;
+  tenantId: string;
+  tenantName: string;
+  connectorName: string;
+  connectorType: string;
+  status: string;
+  lastRunCompletedUtc: string;
+  itemsProcessed: number;
+  warningCount: number;
+  errorCount: number;
+};
+
 export type Connector = {
   id: string;
   name: string;
+  type: string;
   tenant: string;
   status: ConnectorStatus;
   lastSuccessfulSync: string;
+  lastRun: string;
   lastError: string;
   itemsIndexed: number;
+  itemsProcessed: number;
+  warningCount: number;
+  errorCount: number;
   enabled: boolean;
   syncProgress?: string;
   lastSyncAge: string;
